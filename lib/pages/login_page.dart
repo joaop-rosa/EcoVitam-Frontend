@@ -1,5 +1,8 @@
 import 'dart:convert'; // Para codificação Base64
+import 'package:ecovitam/components/Button.dart';
+import 'package:ecovitam/components/form/CustomTextFormField.dart';
 import 'package:ecovitam/pages/home_page.dart';
+import 'package:ecovitam/pages/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -33,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
         base64Encode(utf8.encode(passwordController.text.trim()));
 
     // Codificação dos dados para Basic Auth
-    String basicAuth = 'Basic ' + base64Encode(utf8.encode('$email:$password'));
+    String basicAuth = 'Basic ${base64Encode(utf8.encode('$email:$password'))}';
 
     try {
       final response = await http.post(
@@ -92,64 +95,25 @@ class _LoginPageState extends State<LoginPage> {
               key: _formKey,
               child: Column(
                 children: [
-                  TextFormField(
+                  CustomTextFormField(
                     controller: emailController,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.black12,
-                      hintText: 'Digite o seu e-mail',
-                      hintStyle: const TextStyle(color: Colors.white70),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(7),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
+                    hintText: 'Digite o seu e-mail',
                   ),
                   const SizedBox(height: 15),
-                  TextFormField(
+                  CustomTextFormField(
                     controller: passwordController,
-                    obscureText: true,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.black12,
-                      hintText: 'Digite sua senha',
-                      hintStyle: const TextStyle(color: Colors.white70),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(7),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
+                    hintText: 'Digite sua senha',
+                    obscureText: true, // Especifica que o texto deve ser oculto
                   ),
                   const SizedBox(height: 30),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(15),
-                        backgroundColor: const Color.fromRGBO(122, 147, 114, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                      ),
-                      child: isLoading
-                          ? const CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(Colors.white),
-                            )
-                          : const Text(
-                              "Acessar",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          _login();
-                        }
-                      },
-                    ),
+                  Button(
+                    isLoading: isLoading, // Estado de carregamento
+                    text: 'Acessar', // Texto do botão
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        _login();
+                      }
+                    },
                   ),
                 ],
               ),
@@ -170,11 +134,18 @@ class _LoginPageState extends State<LoginPage> {
                     "Cadastre-se",
                     style: TextStyle(
                         decoration: TextDecoration.underline,
+                        decorationColor: Color.fromRGBO(195, 255, 158, 1),
                         color: Color.fromRGBO(195, 255, 158, 1),
                         fontSize: 16,
                         fontWeight: FontWeight.w800),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const RegisterPage()),
+                    );
+                  },
                 ),
               ],
             )
