@@ -1,6 +1,7 @@
 import 'dart:convert'; // Para codificação Base64
 import 'package:ecovitam/components/Button.dart';
 import 'package:ecovitam/components/form/CustomTextFormField.dart';
+import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/pages/home_page.dart';
 import 'package:ecovitam/pages/register_page.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,10 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        String token = responseData['token'];
+        await storeToken(token);
+
         // Se o login for bem-sucedido, navegue para a HomePage
         Navigator.push(
           context,

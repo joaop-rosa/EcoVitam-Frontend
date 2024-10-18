@@ -1,4 +1,5 @@
 import 'package:ecovitam/components/Button.dart';
+import 'package:ecovitam/components/DefaultAppBar.dart';
 import 'package:ecovitam/components/form/BirthdatePicker.dart';
 import 'package:ecovitam/components/form/CityDropdown.dart';
 import 'package:ecovitam/components/form/CustomTextFormField.dart';
@@ -21,6 +22,7 @@ class _RegisterPageState extends State<RegisterPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController lastnameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController passwordConfirmController =
       TextEditingController();
@@ -60,7 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
         'primeiro_nome':
             nameController.text.split(' ').first, // Pega o primeiro nome
         'ultimo_nome':
-            nameController.text.split(' ').last, // Pega o último nome
+            lastnameController.text.split(' ').last, // Pega o último nome
         'estado': selectedUF ?? '',
         'cidade': selectedCity ?? '',
         'data_nascimento': birthdate, // A data de nascimento
@@ -98,27 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 56, 67, 57),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Padding(
-          padding: const EdgeInsets.only(top: 16.0, bottom: 16),
-          child: Row(
-            children: [
-              const Spacer(),
-              Image.asset(
-                'assets/images/logo.png',
-                height: 60,
-              ),
-            ],
-          ),
-        ),
-      ),
+      appBar: DefaultAppBar(),
       body: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(27),
@@ -127,7 +109,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: [
               CustomTextFormField(
                 controller: emailController,
@@ -142,10 +124,21 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 15),
               CustomTextFormField(
                 controller: nameController,
-                hintText: 'Nome completo',
+                hintText: 'Nome',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Por favor, insira seu nome completo';
+                    return 'Por favor, insira seu nome';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 15),
+              CustomTextFormField(
+                controller: lastnameController,
+                hintText: 'Sobrenome',
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, insira seu sobrenome';
                   }
                   return null;
                 },
@@ -202,7 +195,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     });
                   },
                 ),
-              const Spacer(),
+              const SizedBox(height: 25),
               Button(
                 isLoading: isLoading,
                 text: 'Cadastrar',

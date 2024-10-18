@@ -44,7 +44,7 @@ class _UFDropdownState extends State<UFDropdown> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? const CircularProgressIndicator()
+        ? const Center(child: CircularProgressIndicator())
         : DropdownButtonFormField<String>(
             value: selectedUF,
             onChanged: (String? newValue) {

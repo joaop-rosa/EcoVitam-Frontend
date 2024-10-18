@@ -59,7 +59,7 @@ class _CityDropdownState extends State<CityDropdown> {
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? const CircularProgressIndicator()
+        ? const Center(child: CircularProgressIndicator())
         : DropdownButtonFormField<String>(
             value: selectedCity,
             onChanged: (String? newValue) {
