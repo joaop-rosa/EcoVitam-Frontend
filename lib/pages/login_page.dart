@@ -1,6 +1,7 @@
 import 'dart:convert'; // Para codificação Base64
 import 'package:ecovitam/components/Button.dart';
 import 'package:ecovitam/components/form/CustomTextFormField.dart';
+import 'package:ecovitam/constants/colors.dart';
 import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/pages/home_page.dart';
 import 'package:ecovitam/pages/register_page.dart';
@@ -65,7 +66,6 @@ class _LoginPageState extends State<LoginPage> {
         );
       }
     } catch (e) {
-      print('Erro: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Ocorreu um erro. Tente novamente mais tarde.')),
@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(27),
         decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 56, 67, 57),
+          color: background,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -139,8 +139,8 @@ class _LoginPageState extends State<LoginPage> {
                     "Cadastre-se",
                     style: TextStyle(
                         decoration: TextDecoration.underline,
-                        decorationColor: Color.fromRGBO(195, 255, 158, 1),
-                        color: Color.fromRGBO(195, 255, 158, 1),
+                        decorationColor: primary,
+                        color: primary,
                         fontSize: 16,
                         fontWeight: FontWeight.w800),
                   ),

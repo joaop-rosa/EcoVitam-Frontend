@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const DefaultAppBar({super.key});
+  // TODO - implementar
+  final bool hasArrowBack;
+
+  const DefaultAppBar({
+    super.key,
+    this.hasArrowBack = true,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(70.0);
