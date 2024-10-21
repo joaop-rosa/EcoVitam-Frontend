@@ -3,8 +3,6 @@ import 'package:ecovitam/components/Button.dart';
 import 'package:ecovitam/components/form/CustomTextFormField.dart';
 import 'package:ecovitam/constants/colors.dart';
 import 'package:ecovitam/helpers/jwt.dart';
-import 'package:ecovitam/pages/home_page.dart';
-import 'package:ecovitam/pages/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -54,11 +52,7 @@ class _LoginPageState extends State<LoginPage> {
         String token = responseData['token'];
         await storeToken(token);
 
-        // Se o login for bem-sucedido, navegue para a HomePage
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
+        Navigator.pushReplacementNamed(context, '/home');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -145,11 +139,7 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.w800),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const RegisterPage()),
-                    );
+                    Navigator.pushNamed(context, '/register');
                   },
                 ),
               ],

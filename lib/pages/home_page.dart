@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
-
+import 'package:ecovitam/components/BottomNavigationBarDefault.dart';
 import 'package:ecovitam/components/CollectionPointItem.dart';
 import 'package:ecovitam/components/DefaultAppBar.dart';
 import 'package:ecovitam/components/EventItem.dart';
@@ -137,8 +136,14 @@ class _HomePageState extends State<HomePage> {
           });
     }
 
-    return const Column(
-      children: [],
+    return const Text(
+      'Não encontramos resultados para sua pesquisa',
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+      textAlign: TextAlign.center,
     );
   }
 
@@ -148,87 +153,102 @@ class _HomePageState extends State<HomePage> {
         appBar: const DefaultAppBar(
           hasArrowBack: false,
         ),
+        bottomNavigationBar: const BottomNavigationBarDefault(),
         body: Container(
-          width: MediaQuery.of(context).size.width,
-          padding: const EdgeInsets.all(27),
-          decoration: const BoxDecoration(
-            color: background,
-          ),
-          child: Column(
-            children: [
-              HomeInputFilter(
-                onChanged: (value) {
-                  _lastQueryCity = value;
-                  fetchList(); // Faz a requisição à API
-                },
-                hintText: 'Digite o nome',
-              ),
-              HomeInputFilter(
-                onChanged: (value) {
-                  _lastQueryName = value;
-                  fetchList(); // Faz a requisição à API
-                },
-                hintText: 'Digite a cidade',
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(27),
+            decoration: const BoxDecoration(
+              color: background,
+            ),
+            child: Stack(children: [
+              Column(
                 children: [
+                  HomeInputFilter(
+                    onChanged: (value) {
+                      _lastQueryCity = value;
+                      fetchList(); // Faz a requisição à API
+                    },
+                    hintText: 'Digite o nome',
+                  ),
+                  HomeInputFilter(
+                    onChanged: (value) {
+                      _lastQueryName = value;
+                      fetchList(); // Faz a requisição à API
+                    },
+                    hintText: 'Digite a cidade',
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                          child: ElevatedButton(
+                              onPressed: () => {
+                                    setState(() {
+                                      String oldState = selectedButton;
+                                      selectedButton = 'collectionPoint';
+                                      if (selectedButton != oldState) {
+                                        fetchList();
+                                      }
+                                    })
+                                  },
+                              style: selectedButton == 'collectionPoint'
+                                  ? const ButtonStyle(
+                                      backgroundColor:
+                                          WidgetStatePropertyAll(primary),
+                                    )
+                                  : const ButtonStyle(),
+                              child: const Text(
+                                'Pontos de coleta',
+                                style: TextStyle(
+                                    color: Color.fromRGBO(7, 7, 7, 1),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14),
+                              ))),
+                      const SizedBox(width: 16),
+                      Expanded(
+                          child: ElevatedButton(
+                              onPressed: () => {
+                                    setState(() {
+                                      String oldState = selectedButton;
+                                      selectedButton = 'events';
+                                      if (selectedButton != oldState) {
+                                        fetchList();
+                                      }
+                                    })
+                                  },
+                              style: selectedButton == 'events'
+                                  ? const ButtonStyle(
+                                      backgroundColor:
+                                          WidgetStatePropertyAll(primary))
+                                  : const ButtonStyle(),
+                              child: const Text('Eventos',
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(7, 7, 7, 1),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14)))),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   Expanded(
-                      child: ElevatedButton(
-                          onPressed: () => {
-                                setState(() {
-                                  String oldState = selectedButton;
-                                  selectedButton = 'collectionPoint';
-                                  if (selectedButton != oldState) {
-                                    fetchList();
-                                  }
-                                })
-                              },
-                          style: selectedButton == 'collectionPoint'
-                              ? const ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll(primary),
-                                )
-                              : const ButtonStyle(),
-                          child: const Text(
-                            'Pontos de coleta',
-                            style: TextStyle(
-                                color: Color.fromRGBO(7, 7, 7, 1),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14),
-                          ))),
-                  const SizedBox(width: 16),
-                  Expanded(
-                      child: ElevatedButton(
-                          onPressed: () => {
-                                setState(() {
-                                  String oldState = selectedButton;
-                                  selectedButton = 'events';
-                                  if (selectedButton != oldState) {
-                                    fetchList();
-                                  }
-                                })
-                              },
-                          style: selectedButton == 'events'
-                              ? const ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll(primary))
-                              : const ButtonStyle(),
-                          child: const Text('Eventos',
-                              style: TextStyle(
-                                  color: Color.fromRGBO(7, 7, 7, 1),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14)))),
+                    child: renderList(),
+                  ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Expanded(
-                child: renderList(),
-              ),
-            ],
-          ),
-        ));
+              Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: IconButton(
+                    onPressed: () => {},
+                    icon: const Icon(
+                      Icons.add,
+                    ),
+                    style: const ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(primary),
+                      minimumSize: WidgetStatePropertyAll(Size(52, 52)),
+                    ),
+                  ))
+            ])));
   }
 }

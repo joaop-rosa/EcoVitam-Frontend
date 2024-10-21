@@ -4,8 +4,6 @@ import 'package:ecovitam/components/form/BirthdatePicker.dart';
 import 'package:ecovitam/components/form/CityDropdown.dart';
 import 'package:ecovitam/components/form/CustomTextFormField.dart';
 import 'package:ecovitam/components/form/UfDropdown.dart';
-import 'package:ecovitam/pages/home_page.dart';
-import 'package:ecovitam/pages/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -76,10 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
             body: jsonEncode(body));
 
         if (response.statusCode == 200) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const HomePage()),
-          );
+          Navigator.pushReplacementNamed(context, '/home');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Erro ao registrar: ${response.body}'),
@@ -223,11 +218,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           fontWeight: FontWeight.w800),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
-                      );
+                      Navigator.pushNamed(context, '/');
                     },
                   ),
                 ],

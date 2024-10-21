@@ -1,3 +1,5 @@
+import 'package:ecovitam/pages/home_page.dart';
+import 'package:ecovitam/pages/register_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ecovitam/pages/login_page.dart';
@@ -20,7 +22,12 @@ class MyApp extends StatelessWidget {
             backgroundColor: const Color.fromARGB(255, 56, 67, 57)),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+        '/home': (context) => const HomePage(),
+      },
     );
   }
 }
