@@ -1,13 +1,18 @@
+import 'package:ecovitam/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
   final bool isLoading;
   final String text;
   final VoidCallback onPressed;
+  final Color backgroundColor;
+  final Color textColor;
 
   const Button({
     super.key,
-    required this.isLoading,
+    this.isLoading = false,
+    this.backgroundColor = sucess,
+    this.textColor = Colors.white,
     required this.text,
     required this.onPressed,
   });
@@ -19,20 +24,20 @@ class Button extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.all(15),
-          backgroundColor: const Color.fromRGBO(122, 147, 114, 1),
+          backgroundColor: backgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(7),
           ),
         ),
         onPressed: isLoading ? null : onPressed,
         child: isLoading
-            ? const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.white),
+            ? CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(textColor),
               )
             : Text(
                 text,
-                style: const TextStyle(
-                    color: Colors.white,
+                style: TextStyle(
+                    color: textColor,
                     fontSize: 20,
                     fontWeight: FontWeight.w600),
               ),

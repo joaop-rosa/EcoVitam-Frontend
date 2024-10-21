@@ -3,12 +3,12 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class CityDropdown extends StatefulWidget {
-  final String selectedUF;
+  final String? selectedUF;
   final ValueChanged<String?> onChanged;
 
   const CityDropdown({
     super.key,
-    required this.selectedUF,
+    this.selectedUF,
     required this.onChanged,
   });
 
@@ -19,15 +19,20 @@ class CityDropdown extends StatefulWidget {
 class _CityDropdownState extends State<CityDropdown> {
   String? selectedCity;
   List<String> cities = [];
-  bool isLoading = true;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    fetchCities(widget.selectedUF);
+    if (widget.selectedUF != null) {
+      fetchCities(widget.selectedUF!);
+    }
   }
 
   Future<void> fetchCities(String uf) async {
+    setState(() {
+      isLoading = true;
+    });
     final response = await http.get(Uri.parse(
         'https://servicodados.ibge.gov.br/api/v1/localidades/estados/$uf/distritos')); // URL da API para cidades
 
@@ -47,19 +52,23 @@ class _CityDropdownState extends State<CityDropdown> {
   void didUpdateWidget(covariant CityDropdown oldWidget) {
     super.didUpdateWidget(
         oldWidget); // Certifique-se de chamar o método da superclasse
-    if (widget.selectedUF != oldWidget.selectedUF) {
+    if (widget.selectedUF != oldWidget.selectedUF &&
+        widget.selectedUF != null) {
       setState(() {
         isLoading = true;
         selectedCity = null; // Limpa a cidade ao trocar o estado
       });
-      fetchCities(widget.selectedUF);
+      fetchCities(widget.selectedUF!);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return isLoading
-        ? const Center(child: CircularProgressIndicator())
+        ? const Center(
+            child: CircularProgressIndicator(
+            color: Colors.white,
+          ))
         : DropdownButtonFormField<String>(
             value: selectedCity,
             onChanged: (String? newValue) {
@@ -76,7 +85,8 @@ class _CityDropdownState extends State<CityDropdown> {
             }).toList(),
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.white,
+              fillColor:
+                  widget.selectedUF == null ? Colors.white30 : Colors.white,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(7),
                 borderSide: BorderSide.none,

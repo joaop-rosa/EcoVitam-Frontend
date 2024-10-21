@@ -11,7 +11,7 @@ class BottomNavigationBarDefault extends StatefulWidget {
 
 class _BottomNavigationBarDefaultState
     extends State<BottomNavigationBarDefault> {
-  // TODO - ajustar para pegar com base na rota
+  // TODO - ajustar para pegar com base na rota atual
   int currentPageIndex = 0;
 
   @override

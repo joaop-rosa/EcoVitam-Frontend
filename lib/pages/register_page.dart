@@ -95,7 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DefaultAppBar(),
+      appBar: const DefaultAppBar(),
       body: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.all(27),
@@ -181,15 +181,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
               ),
               const SizedBox(height: 15),
-              if (selectedUF != null)
-                CityDropdown(
-                  selectedUF: selectedUF!,
-                  onChanged: (String? city) {
-                    setState(() {
-                      selectedCity = city;
-                    });
-                  },
-                ),
+              CityDropdown(
+                selectedUF: selectedUF,
+                onChanged: (String? city) {
+                  setState(() {
+                    selectedCity = city;
+                  });
+                },
+              ),
               const SizedBox(height: 25),
               Button(
                 isLoading: isLoading,

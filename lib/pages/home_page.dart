@@ -6,6 +6,7 @@ import 'package:ecovitam/components/EventItem.dart';
 import 'package:ecovitam/components/HomeInputFilter.dart';
 import 'package:ecovitam/constants/colors.dart';
 import 'package:ecovitam/helpers/jwt.dart';
+import 'package:ecovitam/modals/AddCollectionPointModal.dart';
 import 'package:ecovitam/models/CollectionPoint.dart';
 import 'package:ecovitam/models/Events.dart';
 import 'package:flutter/material.dart';
@@ -240,7 +241,15 @@ class _HomePageState extends State<HomePage> {
                   bottom: 0,
                   right: 0,
                   child: IconButton(
-                    onPressed: () => {},
+                    onPressed: () => {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (BuildContext context) {
+                          return const AddCollectionPointModal();
+                        },
+                      )
+                    },
                     icon: const Icon(
                       Icons.add,
                     ),
