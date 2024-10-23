@@ -1,6 +1,6 @@
 import 'package:ecovitam/components/Button.dart';
 import 'package:ecovitam/components/DefaultAppBar.dart';
-import 'package:ecovitam/components/form/BirthdatePicker.dart';
+import 'package:ecovitam/components/form/DatePicker.dart';
 import 'package:ecovitam/components/form/CityDropdown.dart';
 import 'package:ecovitam/components/form/CustomTextFormField.dart';
 import 'package:ecovitam/components/form/UfDropdown.dart';
@@ -163,8 +163,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
               ),
               const SizedBox(height: 15),
-              BirthdatePicker(
+              DatePicker(
                 controller: birthdateController,
+                hintText: 'Selecione sua data de nascimento',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Por favor, selecione sua data de nascimento';

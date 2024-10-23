@@ -6,7 +6,7 @@ import 'package:ecovitam/components/EventItem.dart';
 import 'package:ecovitam/components/HomeInputFilter.dart';
 import 'package:ecovitam/constants/colors.dart';
 import 'package:ecovitam/helpers/jwt.dart';
-import 'package:ecovitam/modals/AddCollectionPointModal.dart';
+import 'package:ecovitam/modals/HomeModal.dart';
 import 'package:ecovitam/models/CollectionPoint.dart';
 import 'package:ecovitam/models/Events.dart';
 import 'package:flutter/material.dart';
@@ -238,26 +238,32 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: IconButton(
-                    onPressed: () => {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (BuildContext context) {
-                          return const AddCollectionPointModal();
-                        },
-                      )
-                    },
-                    icon: const Icon(
-                      Icons.add,
-                    ),
-                    style: const ButtonStyle(
-                      backgroundColor: WidgetStatePropertyAll(primary),
-                      minimumSize: WidgetStatePropertyAll(Size(52, 52)),
-                    ),
-                  ))
+                bottom: 0,
+                right: 0,
+                child: IconButton(
+                  onPressed: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (BuildContext context) {
+                        return const HomeModal();
+                      },
+                    );
+
+                    if (result == true) {
+                      fetchList(); // Recarrega os dados
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                  ),
+                  // Para definir o fundo e o tamanho do ícone:
+                  style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(primary),
+                    minimumSize: WidgetStatePropertyAll(Size(52, 52)),
+                  ),
+                ),
+              )
             ])));
   }
 }

@@ -57,7 +57,7 @@ class _EventItemState extends State<EventItem> {
               'Endereço: ${widget.endereco} - ${widget.cidade} - ${widget.estado}'),
           Text('Contato: ${widget.contato}'),
           Text(
-              'Data: ${widget.data.day}/ ${widget.data.month}/${widget.data.year}'),
+              'Data: ${widget.data.day}/${widget.data.month}/${widget.data.year}'),
           Text(
               '${widget.horaInicio.substring(0, 5)}h as ${widget.horaFim.substring(0, 5)}h'),
           Row(

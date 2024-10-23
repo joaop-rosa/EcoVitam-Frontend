@@ -9,13 +9,29 @@ class BottomNavigationBarDefault extends StatefulWidget {
       _BottomNavigationBarDefaultState();
 }
 
+int getCurrentPageIndex(BuildContext context) {
+  // Obtém o nome da rota atual
+  String? currentRoute = ModalRoute.of(context)?.settings.name;
+
+  // Mapeia as rotas para índices de página
+  switch (currentRoute) {
+    case '/article':
+      return 0;
+    case '/home':
+      return 1;
+    case '/user':
+      return 2;
+    default:
+      return 0; // Valor padrão se a rota não for reconhecida
+  }
+}
+
 class _BottomNavigationBarDefaultState
     extends State<BottomNavigationBarDefault> {
-  // TODO - ajustar para pegar com base na rota atual
-  int currentPageIndex = 0;
-
   @override
   Widget build(BuildContext context) {
+    int currentPageIndex = getCurrentPageIndex(context);
+
     return NavigationBar(
       backgroundColor: bottomNavigatorBackground,
       labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
@@ -26,13 +42,13 @@ class _BottomNavigationBarDefaultState
           currentPageIndex = index;
           switch (index) {
             case 0:
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushNamed(context, '/article');
               break;
             case 1:
               Navigator.pushNamed(context, '/home');
               break;
             case 2:
-              Navigator.pushNamed(context, '/home');
+              Navigator.pushNamed(context, '/user');
               break;
             default:
           }

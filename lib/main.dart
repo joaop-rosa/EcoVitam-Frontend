@@ -1,5 +1,7 @@
+import 'package:ecovitam/pages/article_page.dart';
 import 'package:ecovitam/pages/home_page.dart';
 import 'package:ecovitam/pages/register_page.dart';
+import 'package:ecovitam/pages/user_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ecovitam/pages/login_page.dart';
@@ -27,6 +29,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
+        '/article': (context) => const ArticlePage(),
+        '/user': (context) => const UserPage(),
       },
     );
   }
