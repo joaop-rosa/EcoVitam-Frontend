@@ -1,5 +1,6 @@
 import 'package:ecovitam/components/BottomNavigationBarDefault.dart';
 import 'package:ecovitam/components/DefaultAppBar.dart';
+import 'package:ecovitam/constants/colors.dart';
 import 'package:flutter/material.dart';
 
 class ArticlePage extends StatefulWidget {
@@ -12,10 +13,17 @@ class ArticlePage extends StatefulWidget {
 class _ArticlePageState extends State<ArticlePage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        appBar: DefaultAppBar(
+    return Scaffold(
+        appBar: const DefaultAppBar(
           hasArrowBack: false,
         ),
-        bottomNavigationBar: BottomNavigationBarDefault());
+        bottomNavigationBar: const BottomNavigationBarDefault(),
+        body: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.all(27),
+          decoration: const BoxDecoration(
+            color: background,
+          ),
+        ));
   }
 }

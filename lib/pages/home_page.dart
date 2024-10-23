@@ -167,16 +167,16 @@ class _HomePageState extends State<HomePage> {
                   HomeInputFilter(
                     onChanged: (value) {
                       _lastQueryCity = value;
-                      fetchList(); // Faz a requisição à API
+                      fetchList();
                     },
-                    hintText: 'Digite o nome',
+                    hintText: 'Digite o cidade',
                   ),
                   HomeInputFilter(
                     onChanged: (value) {
                       _lastQueryName = value;
-                      fetchList(); // Faz a requisição à API
+                      fetchList();
                     },
-                    hintText: 'Digite a cidade',
+                    hintText: 'Digite a nome',
                   ),
                   const SizedBox(height: 20),
                   Row(
