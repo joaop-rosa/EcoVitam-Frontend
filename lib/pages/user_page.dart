@@ -6,9 +6,11 @@ import 'package:ecovitam/constants/colors.dart';
 import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/models/CollectionPoint.dart';
 import 'package:ecovitam/models/Events.dart';
+import 'package:ecovitam/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class UserPage extends StatefulWidget {
   const UserPage({super.key});
@@ -23,6 +25,7 @@ class _UserPageState extends State<UserPage> {
   List<CollectionPoint> collectionPoints = [];
   List<Event> events = [];
   String selectedButton = 'collectionPoint';
+  User? user;
 
   Future<void> fetchList() async {
     setState(() {
@@ -78,10 +81,22 @@ class _UserPageState extends State<UserPage> {
     }
   }
 
+  Future<void> initializeData() async {
+    final token = await getToken();
+    if (token != null) {
+      setState(() {
+        final decodedToken = JwtDecoder.decode(token);
+        user = User.fromJson(jsonDecode(decodedToken['user']));
+      });
+    }
+
+    fetchList();
+  }
+
   @override
   void initState() {
     super.initState();
-    fetchList();
+    initializeData();
   }
 
   Widget renderList() {
@@ -157,25 +172,36 @@ class _UserPageState extends State<UserPage> {
           ),
           child: Column(
             children: [
+              user != null
+                  ? Column(children: [
+                      Text(
+                        'Nome: ${user?.nome}',
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                      Text(
+                        'Cidade: ${user?.cidade} - ${user?.estado}',
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
+                      )
+                    ])
+                  : const CircularProgressIndicator(),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Expanded(
                       child: ElevatedButton(
-                          onPressed: () => {
-                                setState(() {
-                                  String oldState = selectedButton;
-                                  selectedButton = 'collectionPoint';
-                                  if (selectedButton != oldState) {
-                                    fetchList();
-                                  }
-                                })
-                              },
+                          onPressed: () {
+                            setState(() {
+                              selectedButton = 'collectionPoint';
+                              fetchList();
+                            });
+                          },
                           style: selectedButton == 'collectionPoint'
-                              ? const ButtonStyle(
+                              ? ButtonStyle(
                                   backgroundColor:
-                                      WidgetStatePropertyAll(primary),
+                                      WidgetStateProperty.all(primary),
                                 )
                               : const ButtonStyle(),
                           child: const Text(
@@ -188,25 +214,25 @@ class _UserPageState extends State<UserPage> {
                   const SizedBox(width: 16),
                   Expanded(
                       child: ElevatedButton(
-                          onPressed: () => {
-                                setState(() {
-                                  String oldState = selectedButton;
-                                  selectedButton = 'events';
-                                  if (selectedButton != oldState) {
-                                    fetchList();
-                                  }
-                                })
-                              },
+                          onPressed: () {
+                            setState(() {
+                              selectedButton = 'events';
+                              fetchList();
+                            });
+                          },
                           style: selectedButton == 'events'
-                              ? const ButtonStyle(
+                              ? ButtonStyle(
                                   backgroundColor:
-                                      WidgetStatePropertyAll(primary))
+                                      WidgetStateProperty.all(primary),
+                                )
                               : const ButtonStyle(),
-                          child: const Text('Eventos',
-                              style: TextStyle(
-                                  color: Color.fromRGBO(7, 7, 7, 1),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14)))),
+                          child: const Text(
+                            'Eventos',
+                            style: TextStyle(
+                                color: Color.fromRGBO(7, 7, 7, 1),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14),
+                          ))),
                 ],
               ),
               const SizedBox(height: 20),
