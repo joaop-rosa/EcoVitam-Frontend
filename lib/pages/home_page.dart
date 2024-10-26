@@ -169,14 +169,17 @@ class _HomePageState extends State<HomePage> {
                       _lastQueryCity = value;
                       fetchList();
                     },
-                    hintText: 'Digite o cidade',
+                    hintText: 'Busque pela cidade',
+                  ),
+                  const SizedBox(
+                    height: 15,
                   ),
                   HomeInputFilter(
                     onChanged: (value) {
                       _lastQueryName = value;
                       fetchList();
                     },
-                    hintText: 'Digite a nome',
+                    hintText: 'Busque pelo nome',
                   ),
                   const SizedBox(height: 20),
                   Row(
@@ -246,7 +249,11 @@ class _HomePageState extends State<HomePage> {
                       context: context,
                       isScrollControlled: true,
                       builder: (BuildContext context) {
-                        return const HomeModal();
+                        return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: const HomeModal());
                       },
                     );
 

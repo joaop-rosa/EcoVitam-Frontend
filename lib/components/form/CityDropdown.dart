@@ -40,7 +40,7 @@ class _CityDropdownState extends State<CityDropdown> {
       List<dynamic> data = json.decode(response.body);
 
       setState(() {
-        cities = data.map((city) => city['nome'].toString()).toList();
+        cities = data.map((city) => city['nome'].toString()).toList()..sort();
         isLoading = false;
       });
     } else {

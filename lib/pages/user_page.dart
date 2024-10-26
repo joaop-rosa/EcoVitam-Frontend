@@ -119,7 +119,8 @@ class _UserPageState extends State<UserPage> {
                   contato: collectionPoint.contato,
                   endereco: collectionPoint.endereco,
                   estado: collectionPoint.estado,
-                  nomeCompleto: collectionPoint.nomeCompleto),
+                  nomeCompleto: collectionPoint.nomeCompleto,
+                  isUserOwn: true),
               const SizedBox(height: 15)
             ]);
           });
@@ -132,15 +133,17 @@ class _UserPageState extends State<UserPage> {
             final event = events[index];
             return Column(children: [
               EventItem(
-                  titulo: event.titulo,
-                  cidade: event.cidade,
-                  contato: event.contato,
-                  endereco: event.endereco,
-                  estado: event.estado,
-                  data: event.data,
-                  horaFim: event.horaFim,
-                  horaInicio: event.horaInicio,
-                  nomeCompleto: event.nomeCompleto),
+                titulo: event.titulo,
+                cidade: event.cidade,
+                contato: event.contato,
+                endereco: event.endereco,
+                estado: event.estado,
+                data: event.data,
+                horaFim: event.horaFim,
+                horaInicio: event.horaInicio,
+                nomeCompleto: event.nomeCompleto,
+                isUserOwn: true,
+              ),
               const SizedBox(height: 15)
             ]);
           });

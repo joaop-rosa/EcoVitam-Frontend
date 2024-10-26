@@ -33,7 +33,7 @@ class _UFDropdownState extends State<UFDropdown> {
       List<dynamic> data = json.decode(response.body);
 
       setState(() {
-        ufs = data.map((uf) => uf['sigla'].toString()).toList();
+        ufs = data.map((uf) => uf['sigla'].toString()).toList()..sort();
         isLoading = false;
       });
     } else {

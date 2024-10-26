@@ -41,7 +41,14 @@ class _HomeInputFilterState extends State<HomeInputFilter> {
       controller: _controller,
       onChanged: _onTextChanged,
       decoration: InputDecoration(
-        hintText: widget.hintText ?? 'Digite algo',
+        filled: true,
+        fillColor: Colors.black12,
+        hintText: widget.hintText ?? '',
+        hintStyle: const TextStyle(color: Colors.white70),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(7),
+          borderSide: BorderSide.none,
+        ),
       ),
     );
   }

@@ -10,6 +10,7 @@ class EventItem extends StatefulWidget {
   final String horaInicio;
   final String horaFim;
   final String nomeCompleto;
+  final bool isUserOwn;
 
   const EventItem(
       {super.key,
@@ -21,7 +22,8 @@ class EventItem extends StatefulWidget {
       required this.data,
       required this.horaInicio,
       required this.horaFim,
-      required this.nomeCompleto});
+      required this.nomeCompleto,
+      this.isUserOwn = false});
 
   @override
   _EventItemState createState() => _EventItemState();
@@ -31,13 +33,13 @@ class _EventItemState extends State<EventItem> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.fromLTRB(14, 5, 14, 14),
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(5)),
             color: Colors.white),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
@@ -45,12 +47,19 @@ class _EventItemState extends State<EventItem> {
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
-              IconButton(
-                  onPressed: () => {},
-                  icon: const Icon(
-                    Icons.warning_amber_rounded,
-                    color: Colors.redAccent,
-                  ))
+              widget.isUserOwn
+                  ? IconButton(
+                      onPressed: () => {},
+                      icon: const Icon(
+                        Icons.delete,
+                        color: Colors.redAccent,
+                      ))
+                  : IconButton(
+                      onPressed: () => {},
+                      icon: const Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.redAccent,
+                      ))
             ],
           ),
           Text(
@@ -64,17 +73,19 @@ class _EventItemState extends State<EventItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              ElevatedButton(
-                  onPressed: () => {},
-                  child: const Row(
-                    children: [
-                      Icon(Icons.thumb_up_alt),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text('Gostei (0)')
-                    ],
-                  )),
+              if (!widget.isUserOwn)
+                ElevatedButton(
+                    onPressed: () => {},
+                    child: const Row(
+                      children: [
+                        Icon(Icons.thumb_up_alt),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text('Gostei (0)')
+                      ],
+                    )),
+              const Spacer(),
               Text(
                 'Cadastrado por ${widget.nomeCompleto}',
                 style: const TextStyle(fontSize: 12),

@@ -2,6 +2,7 @@ import 'package:ecovitam/components/Button.dart';
 import 'package:ecovitam/components/form/DatePicker.dart';
 import 'package:ecovitam/components/form/CityDropdown.dart';
 import 'package:ecovitam/components/form/CustomTextFormField.dart';
+import 'package:ecovitam/components/form/PhoneField.dart';
 import 'package:ecovitam/components/form/TimePickerField.dart';
 import 'package:ecovitam/components/form/UfDropdown.dart';
 import 'package:ecovitam/constants/colors.dart';
@@ -142,16 +143,15 @@ class _EventFormState extends State<EventForm> {
             },
           ),
           const SizedBox(height: 15),
-          CustomTextFormField(
-            controller: _contactController,
-            hintText: 'Contato',
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Por favor, insira o contato do ponto de coleta';
-              }
-              return null;
-            },
-          ),
+          PhoneField(
+              controller: _contactController,
+              hintText: 'Contato',
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Por favor, insira o contato do ponto de coleta';
+                }
+                return null;
+              }),
           const SizedBox(height: 15),
           DatePicker(
             controller: _dateController,
