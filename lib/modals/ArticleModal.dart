@@ -78,7 +78,8 @@ class _ArticleModalState extends State<ArticleModal> {
             topRight: Radius.circular(16.0),
           ),
         ),
-        child: Column(
+        child: SingleChildScrollView(
+            child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Form(
@@ -129,6 +130,6 @@ class _ArticleModalState extends State<ArticleModal> {
                       onPressed: () => Navigator.pop(context)),
                 ]))
           ],
-        ));
+        )));
   }
 }

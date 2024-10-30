@@ -25,7 +25,8 @@ class _HomeModalState extends State<HomeModal> {
             topRight: Radius.circular(16.0),
           ),
         ),
-        child: Column(
+        child: SingleChildScrollView(
+            child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
@@ -75,6 +76,6 @@ class _HomeModalState extends State<HomeModal> {
               const CollectionPointForm(),
             if (_selectedValue == 'events') const EventForm()
           ],
-        ));
+        )));
   }
 }
