@@ -20,7 +20,7 @@ class EventForm extends StatefulWidget {
 }
 
 class _EventFormState extends State<EventForm> {
-  final _formKey = GlobalKey<FormState>(); // Chave do formulário para validação
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();

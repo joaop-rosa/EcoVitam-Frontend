@@ -1,3 +1,4 @@
+import 'package:ecovitam/pages/article_detailed_page.dart';
 import 'package:ecovitam/pages/article_page.dart';
 import 'package:ecovitam/pages/home_page.dart';
 import 'package:ecovitam/pages/register_page.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/home': (context) => const HomePage(),
         '/article': (context) => const ArticlePage(),
+        '/article-detailed': (context) => const ArticleDetailedPage(),
         '/user': (context) => const UserPage(),
       },
     );
