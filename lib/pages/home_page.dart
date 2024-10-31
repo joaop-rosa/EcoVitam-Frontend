@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:ecovitam/components/BottomNavigationBarDefault.dart';
 import 'package:ecovitam/components/CollectionPointItem.dart';
 import 'package:ecovitam/components/DefaultAppBar.dart';
@@ -11,6 +10,7 @@ import 'package:ecovitam/models/CollectionPoint.dart';
 import 'package:ecovitam/models/Events.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

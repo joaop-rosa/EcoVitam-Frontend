@@ -1,4 +1,5 @@
 import 'package:ecovitam/components/BottomNavigationBarDefault.dart';
+import 'package:ecovitam/components/Button.dart';
 import 'package:ecovitam/components/CollectionPointItem.dart';
 import 'package:ecovitam/components/DefaultAppBar.dart';
 import 'package:ecovitam/components/EventItem.dart';
@@ -242,6 +243,15 @@ class _UserPageState extends State<UserPage> {
               Expanded(
                 child: renderList(),
               ),
+              const SizedBox(height: 20),
+              Button(
+                text: 'Logout',
+                onPressed: () async {
+                  await deleteToken();
+                  Navigator.pushReplacementNamed(context, '/');
+                },
+                backgroundColor: danger,
+              )
             ],
           ),
         ));

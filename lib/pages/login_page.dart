@@ -18,6 +18,34 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
+  bool isAutoLoginLoading = true;
+
+  Future<void> _autoLogin() async {
+    final authToken = await getToken();
+    try {
+      final response = await http.get(
+        Uri.parse('http://10.0.2.2:3000/check-token'),
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer $authToken'
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Navigator.pushReplacementNamed(context, '/home');
+      }
+    } finally {
+      setState(() {
+        isAutoLoginLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _autoLogin();
+  }
 
   @override
   void dispose() {
@@ -35,12 +63,11 @@ class _LoginPageState extends State<LoginPage> {
     final String password =
         base64Encode(utf8.encode(passwordController.text.trim()));
 
-    // Codificação dos dados para Basic Auth
     String basicAuth = 'Basic ${base64Encode(utf8.encode('$email:$password'))}';
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:3000/login'), // Substitua pelo endpoint real
+        Uri.parse('http://10.0.2.2:3000/login'),
         headers: {
           'Authorization': basicAuth,
           'Content-Type': 'application/json',
@@ -75,78 +102,80 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.all(27),
-        decoration: const BoxDecoration(
-          color: background,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Spacer(),
-            const Image(
-              image: AssetImage('assets/images/logo.png'),
-              width: 140,
-            ),
-            const SizedBox(height: 30),
-            Form(
-              key: _formKey,
+      body: isAutoLoginLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Container(
+              width: MediaQuery.of(context).size.width,
+              padding: const EdgeInsets.all(27),
+              decoration: const BoxDecoration(
+                color: background,
+              ),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomTextFormField(
-                    controller: emailController,
-                    hintText: 'Digite o seu e-mail',
-                  ),
-                  const SizedBox(height: 15),
-                  CustomTextFormField(
-                    controller: passwordController,
-                    hintText: 'Digite sua senha',
-                    obscureText: true, // Especifica que o texto deve ser oculto
+                  const Spacer(),
+                  const Image(
+                    image: AssetImage('assets/images/logo.png'),
+                    width: 140,
                   ),
                   const SizedBox(height: 30),
-                  Button(
-                    isLoading: isLoading, // Estado de carregamento
-                    text: 'Acessar', // Texto do botão
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _login();
-                      }
-                    },
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        CustomTextFormField(
+                          controller: emailController,
+                          hintText: 'Digite o seu e-mail',
+                        ),
+                        const SizedBox(height: 15),
+                        CustomTextFormField(
+                          controller: passwordController,
+                          hintText: 'Digite sua senha',
+                          obscureText: true,
+                        ),
+                        const SizedBox(height: 30),
+                        Button(
+                          isLoading: isLoading,
+                          text: 'Acessar',
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              _login();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
+                  const Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Não tem uma conta?',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400),
+                      ),
+                      TextButton(
+                        child: const Text(
+                          "Cadastre-se",
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              decorationColor: primary,
+                              color: primary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/register');
+                        },
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Não tem uma conta?',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400),
-                ),
-                TextButton(
-                  child: const Text(
-                    "Cadastre-se",
-                    style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        decorationColor: primary,
-                        color: primary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800),
-                  ),
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/register');
-                  },
-                ),
-              ],
-            )
-          ],
-        ),
-      ),
     );
   }
 }

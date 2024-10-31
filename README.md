@@ -18,7 +18,7 @@ samples, guidance on mobile development, and a full API reference.
 TODO LIST
 
 [] - implementar página do artigo /article-detailed/id
-[] - Login automatico /check-token
+[] - implementar helper para excluir jwt token quando ocorrer erro de autenticação
 [] - implementar denuncia
 [] - implementar likes
 [] - implementar exclusão

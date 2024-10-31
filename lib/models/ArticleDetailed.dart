@@ -1,11 +1,11 @@
-class Article {
+class ArticleDetailed {
   final int id;
   final String titulo;
   final String imagemUrl;
   final String conteudo;
   final String nomeCompleto;
 
-  Article({
+  ArticleDetailed({
     required this.id,
     required this.titulo,
     required this.imagemUrl,
@@ -13,9 +13,9 @@ class Article {
     required this.nomeCompleto,
   });
 
-  // Fábrica para criar instância de Article a partir de um JSON
-  factory Article.fromJson(Map<String, dynamic> json) {
-    return Article(
+  // Fábrica para criar instância de ArticleDetailed a partir de um JSON
+  factory ArticleDetailed.fromJson(Map<String, dynamic> json) {
+    return ArticleDetailed(
       id: json['id'],
       nomeCompleto: json['nome_completo'],
       imagemUrl: json['imagemUrl'],
@@ -24,7 +24,7 @@ class Article {
     );
   }
 
-  // Converte a instância de Article para JSON
+  // Converte a instância de ArticleDetailed para JSON
   Map<String, dynamic> toJson() {
     return {
       'id': id,
