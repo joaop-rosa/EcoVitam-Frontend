@@ -4,13 +4,12 @@ import 'package:ecovitam/components/DefaultAppBar.dart';
 import 'package:ecovitam/components/EventItem.dart';
 import 'package:ecovitam/components/HomeInputFilter.dart';
 import 'package:ecovitam/constants/colors.dart';
-import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/modals/HomeModal.dart';
 import 'package:ecovitam/models/CollectionPoint.dart';
 import 'package:ecovitam/models/Events.dart';
+import 'package:ecovitam/presenter/HomePresenter.dart';
+import 'package:ecovitam/view/HomeView.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,75 +18,74 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  String? _lastQueryCity = '';
-  String? _lastQueryName = '';
+class _HomePageState extends State<HomePage> implements HomeView {
   bool isLoading = false;
   bool hasError = false;
+  String selectedButton = 'collectionPoint';
   List<CollectionPoint> collectionPoints = [];
   List<Event> events = [];
-  String selectedButton = 'collectionPoint';
 
-  Future<void> fetchList() async {
-    setState(() {
-      hasError = false;
-      isLoading = true;
-    });
-
-    final Uri url = (selectedButton == 'collectionPoint')
-        ? Uri.parse(
-            'http://10.0.2.2:3000/ponto-coleta?nome=$_lastQueryName&cidade=$_lastQueryCity')
-        : Uri.parse(
-            'http://10.0.2.2:3000/eventos?nome=$_lastQueryName&cidade=$_lastQueryCity');
-
-    final authToken = await getToken();
-    try {
-      final response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer $authToken'
-      });
-
-      if (response.statusCode == 200) {
-        List<dynamic> jsonArray = json.decode(response.body);
-
-        if (selectedButton == 'collectionPoint') {
-          List<CollectionPoint> collectionPointsResponse =
-              jsonArray.map((jsonItem) {
-            return CollectionPoint.fromJson(jsonItem);
-          }).toList();
-
-          setState(() {
-            collectionPoints = collectionPointsResponse;
-          });
-        } else {
-          List<Event> eventsResponse = jsonArray.map((jsonItem) {
-            return Event.fromJson(jsonItem);
-          }).toList();
-
-          setState(() {
-            events = eventsResponse;
-          });
-        }
-      } else {
-        setState(() {
-          hasError = true;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        hasError = true;
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  late HomePresenter presenter;
 
   @override
   void initState() {
     super.initState();
-    fetchList();
+    presenter = HomePresenter(this);
+  }
+
+  @override
+  void showLoading() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void hideLoading() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void showError() {
+    setState(() {
+      hasError = true;
+    });
+  }
+
+  @override
+  void hideError() {
+    setState(() {
+      hasError = false;
+    });
+  }
+
+  @override
+  void setButtonActive(String buttonName) {
+    setState(() {
+      selectedButton = buttonName;
+    });
+  }
+
+  @override
+  void setCollectionPoints(List<CollectionPoint> collectionPoints) {
+    this.collectionPoints = collectionPoints;
+  }
+
+  @override
+  void setEvents(List<Event> events) {
+    this.events = events;
+  }
+
+  void selectedButtonTap(String selectedButtonName) {
+    setState(() {
+      String oldState = selectedButton;
+      selectedButton = selectedButtonName;
+      if (selectedButton != oldState) {
+        presenter.fetchList(selectedButton);
+      }
+    });
   }
 
   Widget renderList() {
@@ -166,8 +164,8 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   HomeInputFilter(
                     onChanged: (value) {
-                      _lastQueryCity = value;
-                      fetchList();
+                      presenter.lastQueryCity = value;
+                      presenter.fetchList(selectedButton);
                     },
                     hintText: 'Busque pela cidade',
                   ),
@@ -176,8 +174,8 @@ class _HomePageState extends State<HomePage> {
                   ),
                   HomeInputFilter(
                     onChanged: (value) {
-                      _lastQueryName = value;
-                      fetchList();
+                      presenter.lastQueryName = value;
+                      presenter.fetchList(selectedButton);
                     },
                     hintText: 'Busque pelo nome',
                   ),
@@ -188,15 +186,8 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Expanded(
                           child: ElevatedButton(
-                              onPressed: () => {
-                                    setState(() {
-                                      String oldState = selectedButton;
-                                      selectedButton = 'collectionPoint';
-                                      if (selectedButton != oldState) {
-                                        fetchList();
-                                      }
-                                    })
-                                  },
+                              onPressed: () =>
+                                  selectedButtonTap('collectionPoint'),
                               style: selectedButton == 'collectionPoint'
                                   ? const ButtonStyle(
                                       backgroundColor:
@@ -213,15 +204,7 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(width: 16),
                       Expanded(
                           child: ElevatedButton(
-                              onPressed: () => {
-                                    setState(() {
-                                      String oldState = selectedButton;
-                                      selectedButton = 'events';
-                                      if (selectedButton != oldState) {
-                                        fetchList();
-                                      }
-                                    })
-                                  },
+                              onPressed: () => selectedButtonTap('events'),
                               style: selectedButton == 'events'
                                   ? const ButtonStyle(
                                       backgroundColor:
@@ -258,13 +241,12 @@ class _HomePageState extends State<HomePage> {
                     );
 
                     if (result == true) {
-                      fetchList(); // Recarrega os dados
+                      presenter.fetchList(selectedButton);
                     }
                   },
                   icon: const Icon(
                     Icons.add,
                   ),
-                  // Para definir o fundo e o tamanho do ícone:
                   style: const ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(primary),
                     minimumSize: WidgetStatePropertyAll(Size(52, 52)),
