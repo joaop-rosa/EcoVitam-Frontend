@@ -1,22 +1,17 @@
+import 'package:ecovitam/constants/colors.dart';
+import 'package:ecovitam/models/CollectionPoint.dart';
+import 'package:ecovitam/presenter/CollectionPointItemPresenter.dart';
 import 'package:flutter/material.dart';
 
 class CollectionPointItem extends StatefulWidget {
-  final String pontoColetaNome;
-  final String endereco;
-  final String cidade;
-  final String estado;
-  final String contato;
-  final String nomeCompleto;
+  final CollectionPoint colletionPoint;
+  final CollectionPointItemPresenter presenter;
   final bool isUserOwn;
 
   const CollectionPointItem(
       {super.key,
-      required this.pontoColetaNome,
-      required this.endereco,
-      required this.cidade,
-      required this.estado,
-      required this.contato,
-      required this.nomeCompleto,
+      required this.colletionPoint,
+      required this.presenter,
       this.isUserOwn = false});
 
   @override
@@ -24,6 +19,26 @@ class CollectionPointItem extends StatefulWidget {
 }
 
 class _CollectionPointItemState extends State<CollectionPointItem> {
+  late bool isLiked;
+
+  @override
+  void initState() {
+    super.initState();
+    isLiked = widget.colletionPoint.is_user_liked;
+  }
+
+  int getLikeNumber() {
+    if (widget.colletionPoint.is_user_liked && !isLiked) {
+      return widget.colletionPoint.total_likes - 1;
+    }
+
+    if (!widget.colletionPoint.is_user_liked && isLiked) {
+      return widget.colletionPoint.total_likes + 1;
+    }
+
+    return widget.colletionPoint.total_likes;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,7 +52,7 @@ class _CollectionPointItemState extends State<CollectionPointItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.pontoColetaNome,
+                widget.colletionPoint.pontoColetaNome,
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
@@ -49,7 +64,8 @@ class _CollectionPointItemState extends State<CollectionPointItem> {
                         color: Colors.redAccent,
                       ))
                   : IconButton(
-                      onPressed: () => {},
+                      onPressed: () => widget.presenter
+                          .sendReport(context, widget.colletionPoint.id),
                       icon: const Icon(
                         Icons.warning_amber_rounded,
                         color: Colors.redAccent,
@@ -57,27 +73,58 @@ class _CollectionPointItemState extends State<CollectionPointItem> {
             ],
           ),
           Text(
-              'Endereço: ${widget.endereco} - ${widget.cidade} - ${widget.estado}'),
-          Text('Contato: ${widget.contato}'),
+              'Endereço: ${widget.colletionPoint.endereco} - ${widget.colletionPoint.cidade} - ${widget.colletionPoint.estado}'),
+          Text('Contato: ${widget.colletionPoint.contato}'),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (!widget.isUserOwn)
                 ElevatedButton(
-                    onPressed: () => {},
-                    child: const Row(
-                      children: [
-                        Icon(Icons.thumb_up_alt),
-                        SizedBox(
-                          width: 5,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isLiked ? sucess : Colors.grey, // Cor dinâmica
+                    foregroundColor: Colors.white, // Cor do texto/ícones
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(8), // Bordas arredondadas
+                    ),
+                  ),
+                  onPressed: () async {
+                    final success = await widget.presenter
+                        .like(context, widget.colletionPoint.id);
+                    if (success != null) {
+                      setState(() {
+                        isLiked = !isLiked;
+                      });
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.thumb_up_alt,
+                        color: isLiked
+                            ? Colors.white
+                            : Colors.black, // Cor do ícone
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Gostei (${getLikeNumber()})',
+                        style: TextStyle(
+                          color: isLiked
+                              ? Colors.white
+                              : Colors.black, // Cor do texto
                         ),
-                        Text('Gostei (0)')
-                      ],
-                    )),
+                      ),
+                    ],
+                  ),
+                ),
               const Spacer(),
               Text(
-                'Cadastrado por ${widget.nomeCompleto}',
+                'Cadastrado por ${widget.colletionPoint.nomeCompleto}',
                 style: const TextStyle(fontSize: 12),
               )
             ],

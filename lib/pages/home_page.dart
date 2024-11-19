@@ -7,6 +7,7 @@ import 'package:ecovitam/constants/colors.dart';
 import 'package:ecovitam/modals/HomeModal.dart';
 import 'package:ecovitam/models/CollectionPoint.dart';
 import 'package:ecovitam/models/Events.dart';
+import 'package:ecovitam/presenter/CollectionPointItemPresenter.dart';
 import 'package:ecovitam/presenter/HomePresenter.dart';
 import 'package:ecovitam/view/HomeView.dart';
 import 'package:flutter/material.dart';
@@ -70,12 +71,16 @@ class _HomePageState extends State<HomePage> implements HomeView {
 
   @override
   void setCollectionPoints(List<CollectionPoint> collectionPoints) {
-    this.collectionPoints = collectionPoints;
+    setState(() {
+      this.collectionPoints = collectionPoints;
+    });
   }
 
   @override
   void setEvents(List<Event> events) {
-    this.events = events;
+    setState(() {
+      this.events = events;
+    });
   }
 
   void selectedButtonTap(String selectedButtonName) {
@@ -97,18 +102,18 @@ class _HomePageState extends State<HomePage> implements HomeView {
     }
 
     if (selectedButton == 'collectionPoint' && collectionPoints.isNotEmpty) {
+      CollectionPointItemPresenter collectionPointItemPresenter =
+          CollectionPointItemPresenter();
+
       return ListView.builder(
           itemCount: collectionPoints.length,
           itemBuilder: (context, index) {
             final collectionPoint = collectionPoints[index];
             return Column(children: [
               CollectionPointItem(
-                  pontoColetaNome: collectionPoint.pontoColetaNome,
-                  cidade: collectionPoint.cidade,
-                  contato: collectionPoint.contato,
-                  endereco: collectionPoint.endereco,
-                  estado: collectionPoint.estado,
-                  nomeCompleto: collectionPoint.nomeCompleto),
+                colletionPoint: collectionPoint,
+                presenter: collectionPointItemPresenter,
+              ),
               const SizedBox(height: 15)
             ]);
           });

@@ -8,6 +8,7 @@ import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/models/CollectionPoint.dart';
 import 'package:ecovitam/models/Events.dart';
 import 'package:ecovitam/models/User.dart';
+import 'package:ecovitam/presenter/CollectionPointItemPresenter.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -112,15 +113,14 @@ class _UserPageState extends State<UserPage> {
       return ListView.builder(
           itemCount: collectionPoints.length,
           itemBuilder: (context, index) {
+            CollectionPointItemPresenter collectionPointItemPresenter =
+                CollectionPointItemPresenter();
+
             final collectionPoint = collectionPoints[index];
             return Column(children: [
               CollectionPointItem(
-                  pontoColetaNome: collectionPoint.pontoColetaNome,
-                  cidade: collectionPoint.cidade,
-                  contato: collectionPoint.contato,
-                  endereco: collectionPoint.endereco,
-                  estado: collectionPoint.estado,
-                  nomeCompleto: collectionPoint.nomeCompleto,
+                  colletionPoint: collectionPoint,
+                  presenter: collectionPointItemPresenter,
                   isUserOwn: true),
               const SizedBox(height: 15)
             ]);

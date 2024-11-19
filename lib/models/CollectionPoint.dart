@@ -6,6 +6,8 @@ class CollectionPoint {
   final String cidade;
   final String contato;
   final String nomeCompleto;
+  final int total_likes;
+  final bool is_user_liked;
 
   CollectionPoint({
     required this.id,
@@ -15,6 +17,8 @@ class CollectionPoint {
     required this.cidade,
     required this.contato,
     required this.nomeCompleto,
+    required this.total_likes,
+    required this.is_user_liked,
   });
 
   factory CollectionPoint.fromJson(Map<String, dynamic> json) {
@@ -26,6 +30,8 @@ class CollectionPoint {
       cidade: json['cidade'],
       contato: json['contato'],
       nomeCompleto: json['nome_completo'],
+      total_likes: json['total_likes'],
+      is_user_liked: json['is_user_liked'] == 1 ? true : false,
     );
   }
 

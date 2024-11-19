@@ -19,17 +19,18 @@ TODO LIST
 
 HIGH
 
-[] - implementar denuncia - backend OK
+[-] - implementar denuncia - backend OK
 [] - implementar artigos likes - backend OK
-[] - implementar eventos e ponto de coleta likes - backend OK
+[-] - implementar eventos e ponto de coleta likes - backend OK
 [] - implementar exclusão - backend OK
+[] - implementar modal de confirmação
 [] - implementar markdown
 [] - implementar login quando registrar
 
 MEDIUM
 
 [] - implementar helper para excluir jwt token quando ocorrer erro de autenticação
-[] - Implementar MVP
+[-] - Implementar MVP
 [] - Não retornar eventos expirados
 
 LOW

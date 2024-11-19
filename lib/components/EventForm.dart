@@ -85,7 +85,6 @@ class _EventFormState extends State<EventForm> {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('Erro ao registrar: ${response.body}'),
           ));
-          print(response.body);
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
