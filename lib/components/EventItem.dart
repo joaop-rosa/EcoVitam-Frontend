@@ -65,8 +65,33 @@ class _EventItemState extends State<EventItem> {
                         color: Colors.redAccent,
                       ))
                   : IconButton(
-                      onPressed: () =>
-                          widget.presenter.sendReport(context, widget.event.id),
+                      onPressed: () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Confirmar denuncia'),
+                              content: Text(
+                                  'Tem certeza que deseja denunciar o evento ${widget.event.titulo}?'),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text(
+                                    'Não',
+                                    style: TextStyle(color: danger),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    await widget.presenter
+                                        .sendReport(context, widget.event.id);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Sim',
+                                      style: TextStyle(color: sucess)),
+                                ),
+                              ],
+                            );
+                          }),
                       icon: const Icon(
                         Icons.warning_amber_rounded,
                         color: Colors.redAccent,

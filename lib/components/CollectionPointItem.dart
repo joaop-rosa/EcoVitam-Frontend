@@ -65,8 +65,33 @@ class _CollectionPointItemState extends State<CollectionPointItem> {
                         color: Colors.redAccent,
                       ))
                   : IconButton(
-                      onPressed: () => widget.presenter
-                          .sendReport(context, widget.colletionPoint.id),
+                      onPressed: () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Confirmar denuncia'),
+                              content: Text(
+                                  'Tem certeza que deseja denunciar o ponto de coleta ${widget.colletionPoint.pontoColetaNome}?'),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text(
+                                    'Não',
+                                    style: TextStyle(color: danger),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    await widget.presenter.sendReport(
+                                        context, widget.colletionPoint.id);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Sim',
+                                      style: TextStyle(color: sucess)),
+                                ),
+                              ],
+                            );
+                          }),
                       icon: const Icon(
                         Icons.warning_amber_rounded,
                         color: Colors.redAccent,
