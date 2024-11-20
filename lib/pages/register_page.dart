@@ -4,10 +4,9 @@ import 'package:ecovitam/components/form/DatePicker.dart';
 import 'package:ecovitam/components/form/CityDropdown.dart';
 import 'package:ecovitam/components/form/CustomTextFormField.dart';
 import 'package:ecovitam/components/form/UfDropdown.dart';
+import 'package:ecovitam/presenter/RegisterPagePresenter.dart';
+import 'package:ecovitam/view/RegisterView.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:intl/intl.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -16,7 +15,7 @@ class RegisterPage extends StatefulWidget {
   _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> implements RegisterView {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -31,64 +30,39 @@ class _RegisterPageState extends State<RegisterPage> {
 
   bool isLoading = false;
 
-  Future<void> registerUser() async {
+  late RegisterPagePresenter presenter;
+
+  @override
+  void initState() {
+    super.initState();
+    presenter = RegisterPagePresenter(this);
+  }
+
+  @override
+  void hideLoading() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void showLoading() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  void onSubmit() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-      });
-
-      // Converte a data de nascimento para o formato aaaa-mm-dd
-      String birthdate = '';
-      try {
-        DateTime date = DateFormat('d/M/yyyy').parse(birthdateController.text);
-        birthdate = DateFormat('yyyy-MM-dd').format(date);
-      } catch (e) {
-        // Se a data for inválida, exibe uma mensagem de erro ou trata o erro adequadamente
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Formato de data inválido'),
-        ));
-        setState(() {
-          isLoading = false;
-        });
-        return;
-      }
-
-      Map<String, String> body = {
-        'email': emailController.text,
-        'senha': base64Encode(
-            utf8.encode(passwordController.text)), // Codifica a senha em Base64
-        'primeiro_nome':
-            nameController.text.split(' ').first, // Pega o primeiro nome
-        'ultimo_nome':
-            lastnameController.text.split(' ').last, // Pega o último nome
-        'estado': selectedUF ?? '',
-        'cidade': selectedCity ?? '',
-        'data_nascimento': birthdate, // A data de nascimento
-      };
-
-      final Uri url = Uri.parse('http://10.0.2.2:3000/user');
-
-      try {
-        final response = await http.post(url,
-            headers: {'Content-Type': 'application/json'},
-            body: jsonEncode(body));
-
-        if (response.statusCode == 200) {
-          Navigator.pushReplacementNamed(context, '/home');
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Erro ao registrar: ${response.body}'),
-          ));
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Erro: $e'),
-        ));
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
-      }
+      presenter.registerUser(
+          context,
+          birthdateController.text,
+          emailController.text,
+          passwordController.text,
+          nameController.text,
+          lastnameController.text,
+          selectedUF!,
+          selectedCity!);
     }
   }
 
@@ -194,7 +168,7 @@ class _RegisterPageState extends State<RegisterPage> {
               Button(
                 isLoading: isLoading,
                 text: 'Cadastrar',
-                onPressed: registerUser,
+                onPressed: onSubmit,
               ),
               const SizedBox(height: 15),
               Row(

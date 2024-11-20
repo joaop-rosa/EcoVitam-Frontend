@@ -1,10 +1,11 @@
-import 'dart:convert'; // Para codificação Base64
 import 'package:ecovitam/components/Button.dart';
 import 'package:ecovitam/components/form/CustomTextFormField.dart';
 import 'package:ecovitam/constants/colors.dart';
-import 'package:ecovitam/helpers/jwt.dart';
+import 'package:ecovitam/presenter/AuthPresenter.dart';
+
+import 'package:ecovitam/presenter/LoginPagePresenter.dart';
+import 'package:ecovitam/view/LoginView.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,38 +14,43 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> implements LoginView {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
   bool isAutoLoginLoading = true;
 
-  Future<void> _autoLogin() async {
-    final authToken = await getToken();
-    try {
-      final response = await http.get(
-        Uri.parse('http://10.0.2.2:3000/check-token'),
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': 'Bearer $authToken'
-        },
-      );
-
-      if (response.statusCode == 200) {
-        Navigator.pushReplacementNamed(context, '/home');
-      }
-    } finally {
-      setState(() {
-        isAutoLoginLoading = false;
-      });
-    }
-  }
+  late LoginPagePresenter presenter;
+  late AuthPresenter authPresenter;
 
   @override
   void initState() {
     super.initState();
-    _autoLogin();
+    presenter = LoginPagePresenter(this);
+    authPresenter = AuthPresenter(this);
+    presenter.autoLogin(context);
+  }
+
+  @override
+  void hideLoading() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void showLoading() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void hideAutoLoginLoading() {
+    setState(() {
+      isAutoLoginLoading = false;
+    });
   }
 
   @override
@@ -52,50 +58,6 @@ class _LoginPageState extends State<LoginPage> {
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
-  }
-
-  Future<void> _login() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final String email = emailController.text.trim();
-    final String password =
-        base64Encode(utf8.encode(passwordController.text.trim()));
-
-    String basicAuth = 'Basic ${base64Encode(utf8.encode('$email:$password'))}';
-
-    try {
-      final response = await http.post(
-        Uri.parse('http://10.0.2.2:3000/login'),
-        headers: {
-          'Authorization': basicAuth,
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        String token = responseData['token'];
-        await storeToken(token);
-
-        Navigator.pushReplacementNamed(context, '/home');
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Login falhou. Verifique suas credenciais.')),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Ocorreu um erro. Tente novamente mais tarde.')),
-      );
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
   }
 
   @override
@@ -139,7 +101,10 @@ class _LoginPageState extends State<LoginPage> {
                           text: 'Acessar',
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              _login();
+                              authPresenter.login(
+                                  context,
+                                  emailController.text.trim(),
+                                  passwordController.text.trim());
                             }
                           },
                         ),

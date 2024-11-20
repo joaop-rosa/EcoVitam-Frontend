@@ -19,19 +19,20 @@ TODO LIST
 
 HIGH
 
-[-] - implementar denuncia - backend OK
-[] - implementar artigos likes - backend OK
-[-] - implementar eventos e ponto de coleta likes - backend OK
-[] - implementar exclusão - backend OK
-[] - implementar modal de confirmação
+[x] - implementar denuncia
+[x] - implementar artigos likes
+[x] - implementar eventos e ponto de coleta likes
+[x] - implementar exclusão
+[x] - implementar login quando registrar
 [] - implementar markdown
-[] - implementar login quando registrar
 
 MEDIUM
 
-[] - implementar helper para excluir jwt token quando ocorrer erro de autenticação
+[] - cidades duplicadas as vezes
+[] - implementar modal de confirmação
 [-] - Implementar MVP
 [] - Não retornar eventos expirados
+[] - implementar helper para excluir jwt token quando ocorrer erro de autenticação
 
 LOW
 

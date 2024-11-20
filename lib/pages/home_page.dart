@@ -8,6 +8,7 @@ import 'package:ecovitam/modals/HomeModal.dart';
 import 'package:ecovitam/models/CollectionPoint.dart';
 import 'package:ecovitam/models/Events.dart';
 import 'package:ecovitam/presenter/CollectionPointItemPresenter.dart';
+import 'package:ecovitam/presenter/EventItemPresenter.dart';
 import 'package:ecovitam/presenter/HomePresenter.dart';
 import 'package:ecovitam/view/HomeView.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _HomePageState extends State<HomePage> implements HomeView {
   void initState() {
     super.initState();
     presenter = HomePresenter(this);
+    presenter.fetchList('collectionPoint');
   }
 
   @override
@@ -123,18 +125,13 @@ class _HomePageState extends State<HomePage> implements HomeView {
       return ListView.builder(
           itemCount: events.length,
           itemBuilder: (context, index) {
+            EventItemPresenter eventItemPresenter = EventItemPresenter();
             final event = events[index];
             return Column(children: [
               EventItem(
-                  titulo: event.titulo,
-                  cidade: event.cidade,
-                  contato: event.contato,
-                  endereco: event.endereco,
-                  estado: event.estado,
-                  data: event.data,
-                  horaFim: event.horaFim,
-                  horaInicio: event.horaInicio,
-                  nomeCompleto: event.nomeCompleto),
+                event: event,
+                presenter: eventItemPresenter,
+              ),
               const SizedBox(height: 15)
             ]);
           });

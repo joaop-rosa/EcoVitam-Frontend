@@ -58,7 +58,8 @@ class _CollectionPointItemState extends State<CollectionPointItem> {
               ),
               widget.isUserOwn
                   ? IconButton(
-                      onPressed: () => {},
+                      onPressed: () => widget.presenter
+                          .delete(context, widget.colletionPoint.id),
                       icon: const Icon(
                         Icons.delete,
                         color: Colors.redAccent,

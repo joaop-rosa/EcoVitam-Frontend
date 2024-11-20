@@ -1,28 +1,17 @@
+import 'package:ecovitam/constants/colors.dart';
+import 'package:ecovitam/models/Events.dart';
+import 'package:ecovitam/presenter/EventItemPresenter.dart';
 import 'package:flutter/material.dart';
 
 class EventItem extends StatefulWidget {
-  final String titulo;
-  final String endereco;
-  final String cidade;
-  final String estado;
-  final String contato;
-  final DateTime data;
-  final String horaInicio;
-  final String horaFim;
-  final String nomeCompleto;
+  final Event event;
+  final EventItemPresenter presenter;
   final bool isUserOwn;
 
   const EventItem(
       {super.key,
-      required this.titulo,
-      required this.endereco,
-      required this.cidade,
-      required this.estado,
-      required this.contato,
-      required this.data,
-      required this.horaInicio,
-      required this.horaFim,
-      required this.nomeCompleto,
+      required this.event,
+      required this.presenter,
       this.isUserOwn = false});
 
   @override
@@ -30,6 +19,26 @@ class EventItem extends StatefulWidget {
 }
 
 class _EventItemState extends State<EventItem> {
+  late bool isLiked;
+
+  @override
+  void initState() {
+    super.initState();
+    isLiked = widget.event.is_user_liked;
+  }
+
+  int getLikeNumber() {
+    if (widget.event.is_user_liked && !isLiked) {
+      return widget.event.total_likes - 1;
+    }
+
+    if (!widget.event.is_user_liked && isLiked) {
+      return widget.event.total_likes + 1;
+    }
+
+    return widget.event.total_likes;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,19 +52,21 @@ class _EventItemState extends State<EventItem> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.titulo,
+                widget.event.titulo,
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               widget.isUserOwn
                   ? IconButton(
-                      onPressed: () => {},
+                      onPressed: () =>
+                          widget.presenter.delete(context, widget.event.id),
                       icon: const Icon(
                         Icons.delete,
                         color: Colors.redAccent,
                       ))
                   : IconButton(
-                      onPressed: () => {},
+                      onPressed: () =>
+                          widget.presenter.sendReport(context, widget.event.id),
                       icon: const Icon(
                         Icons.warning_amber_rounded,
                         color: Colors.redAccent,
@@ -63,31 +74,62 @@ class _EventItemState extends State<EventItem> {
             ],
           ),
           Text(
-              'Endereço: ${widget.endereco} - ${widget.cidade} - ${widget.estado}'),
-          Text('Contato: ${widget.contato}'),
+              'Endereço: ${widget.event.endereco} - ${widget.event.cidade} - ${widget.event.estado}'),
+          Text('Contato: ${widget.event.contato}'),
           Text(
-              'Data: ${widget.data.day}/${widget.data.month}/${widget.data.year}'),
+              'Data: ${widget.event.data.day}/${widget.event.data.month}/${widget.event.data.year}'),
           Text(
-              '${widget.horaInicio.substring(0, 5)}h as ${widget.horaFim.substring(0, 5)}h'),
+              '${widget.event.horaInicio.substring(0, 5)}h as ${widget.event.horaFim.substring(0, 5)}h'),
+          const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (!widget.isUserOwn)
                 ElevatedButton(
-                    onPressed: () => {},
-                    child: const Row(
-                      children: [
-                        Icon(Icons.thumb_up_alt),
-                        SizedBox(
-                          width: 5,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        isLiked ? sucess : Colors.grey, // Cor dinâmica
+                    foregroundColor: Colors.white, // Cor do texto/ícones
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(8), // Bordas arredondadas
+                    ),
+                  ),
+                  onPressed: () async {
+                    final success =
+                        await widget.presenter.like(context, widget.event.id);
+                    if (success != null) {
+                      setState(() {
+                        isLiked = !isLiked;
+                      });
+                    }
+                  },
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.thumb_up_alt,
+                        color: isLiked
+                            ? Colors.white
+                            : Colors.black, // Cor do ícone
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        'Gostei (${getLikeNumber()})',
+                        style: TextStyle(
+                          color: isLiked
+                              ? Colors.white
+                              : Colors.black, // Cor do texto
                         ),
-                        Text('Gostei (0)')
-                      ],
-                    )),
+                      ),
+                    ],
+                  ),
+                ),
               const Spacer(),
               Text(
-                'Cadastrado por ${widget.nomeCompleto}',
+                'Cadastrado por ${widget.event.nomeCompleto}',
                 style: const TextStyle(fontSize: 12),
               )
             ],

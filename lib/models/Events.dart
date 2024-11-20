@@ -9,6 +9,8 @@ class Event {
   final String horaInicio;
   final String horaFim;
   final String nomeCompleto;
+  final int total_likes;
+  final bool is_user_liked;
 
   Event({
     required this.id,
@@ -21,6 +23,8 @@ class Event {
     required this.horaInicio,
     required this.horaFim,
     required this.nomeCompleto,
+    required this.total_likes,
+    required this.is_user_liked,
   });
 
   factory Event.fromJson(Map<String, dynamic> json) {
@@ -35,6 +39,8 @@ class Event {
       horaInicio: json['hora_inicio'],
       horaFim: json['hora_fim'],
       nomeCompleto: json['nome_completo'],
+      total_likes: json['total_likes'],
+      is_user_liked: json['is_user_liked'] == 1 ? true : false,
     );
   }
 

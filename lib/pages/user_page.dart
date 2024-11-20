@@ -9,6 +9,7 @@ import 'package:ecovitam/models/CollectionPoint.dart';
 import 'package:ecovitam/models/Events.dart';
 import 'package:ecovitam/models/User.dart';
 import 'package:ecovitam/presenter/CollectionPointItemPresenter.dart';
+import 'package:ecovitam/presenter/EventItemPresenter.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -131,18 +132,12 @@ class _UserPageState extends State<UserPage> {
       return ListView.builder(
           itemCount: events.length,
           itemBuilder: (context, index) {
+            EventItemPresenter eventItemPresenter = EventItemPresenter();
             final event = events[index];
             return Column(children: [
               EventItem(
-                titulo: event.titulo,
-                cidade: event.cidade,
-                contato: event.contato,
-                endereco: event.endereco,
-                estado: event.estado,
-                data: event.data,
-                horaFim: event.horaFim,
-                horaInicio: event.horaInicio,
-                nomeCompleto: event.nomeCompleto,
+                event: event,
+                presenter: eventItemPresenter,
                 isUserOwn: true,
               ),
               const SizedBox(height: 15)
