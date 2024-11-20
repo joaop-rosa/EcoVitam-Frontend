@@ -29,11 +29,14 @@ HIGH
 
 MEDIUM
 
-[] - cidades duplicadas as vezes
+[x] - cidades duplicadas as vezes
+[x] - Ajustar textos que estão pretos para branco
 [] - implementar modal de confirmação
 [-] - Implementar MVP
 [] - Não retornar eventos expirados
 [] - implementar helper para excluir jwt token quando ocorrer erro de autenticação
+[] - Gerar apk do app
+[] - Fazer deploy do banco e api na Azure
 
 LOW
 

@@ -35,6 +35,7 @@ class PhoneField extends StatelessWidget {
       initialValue: number,
       textFieldController: controller,
       formatInput: true,
+      textStyle: const TextStyle(color: Colors.white, fontSize: 16),
       keyboardType:
           const TextInputType.numberWithOptions(signed: true, decimal: true),
       inputBorder: const OutlineInputBorder(),

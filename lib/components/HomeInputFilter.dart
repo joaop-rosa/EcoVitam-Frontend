@@ -38,18 +38,18 @@ class _HomeInputFilterState extends State<HomeInputFilter> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: _controller,
-      onChanged: _onTextChanged,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: Colors.black12,
-        hintText: widget.hintText ?? '',
-        hintStyle: const TextStyle(color: Colors.white70),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(7),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
+        controller: _controller,
+        onChanged: _onTextChanged,
+        style: const TextStyle(color: Colors.white, fontSize: 16),
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.black12,
+          hintText: widget.hintText ?? '',
+          hintStyle: const TextStyle(color: Colors.white70),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(7),
+            borderSide: BorderSide.none,
+          ),
+        ));
   }
 }
