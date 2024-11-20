@@ -51,15 +51,43 @@ class _EventItemState extends State<EventItem> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              Expanded(
+                  child: Text(
                 widget.event.titulo,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                softWrap: true,
+              )),
               widget.isUserOwn
                   ? IconButton(
-                      onPressed: () =>
-                          widget.presenter.delete(context, widget.event.id),
+                      onPressed: () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Confirmar exclusão'),
+                              content: Text(
+                                  'Tem certeza que deseja deletar o evento ${widget.event.titulo}?'),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text(
+                                    'Não',
+                                    style: TextStyle(color: danger),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    await widget.presenter
+                                        .delete(context, widget.event.id);
+                                  },
+                                  child: const Text('Sim',
+                                      style: TextStyle(color: sucess)),
+                                ),
+                              ],
+                            );
+                          }),
                       icon: const Icon(
                         Icons.delete,
                         color: Colors.redAccent,
@@ -105,7 +133,7 @@ class _EventItemState extends State<EventItem> {
                   style: TextStyle(fontWeight: FontWeight.bold)),
               TextSpan(
                   text:
-                      '${widget.event.data.day}/${widget.event.data.month}/${widget.event.data.year}')
+                      '${widget.event.endereco} - ${widget.event.cidade} - ${widget.event.estado}')
             ]),
           ),
           Text.rich(
@@ -175,11 +203,21 @@ class _EventItemState extends State<EventItem> {
                     ],
                   ),
                 ),
-              const Spacer(),
-              Text(
-                'Cadastrado por ${widget.event.nomeCompleto}',
-                style: const TextStyle(fontSize: 12),
-              )
+              const SizedBox(
+                width: 10,
+              ),
+              Flexible(
+                  child: Text.rich(
+                TextSpan(children: [
+                  const TextSpan(
+                      text: 'Responsável: ',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: widget.event.nomeCompleto,
+                      style: const TextStyle(fontSize: 12))
+                ]),
+              ))
             ],
           )
         ]));

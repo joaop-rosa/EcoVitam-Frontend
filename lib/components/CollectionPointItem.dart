@@ -63,8 +63,32 @@ class _CollectionPointItemState extends State<CollectionPointItem> {
               )),
               widget.isUserOwn
                   ? IconButton(
-                      onPressed: () => widget.presenter
-                          .delete(context, widget.colletionPoint.id),
+                      onPressed: () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Confirmar exclusão'),
+                              content: Text(
+                                  'Tem certeza que deseja deletar o ponto de coleta ${widget.colletionPoint.pontoColetaNome}?'),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text(
+                                    'Não',
+                                    style: TextStyle(color: danger),
+                                  ),
+                                ),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    await widget.presenter.delete(
+                                        context, widget.colletionPoint.id);
+                                  },
+                                  child: const Text('Sim',
+                                      style: TextStyle(color: sucess)),
+                                ),
+                              ],
+                            );
+                          }),
                       icon: const Icon(
                         Icons.delete,
                         color: Colors.redAccent,
