@@ -6,11 +6,9 @@ import 'package:ecovitam/components/form/PhoneField.dart';
 import 'package:ecovitam/components/form/TimePickerField.dart';
 import 'package:ecovitam/components/form/UfDropdown.dart';
 import 'package:ecovitam/constants/colors.dart';
-import 'package:ecovitam/helpers/jwt.dart';
+import 'package:ecovitam/presenter/EventFormPresenter.dart';
+import 'package:ecovitam/view/EventFormView.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:intl/intl.dart';
 
 class EventForm extends StatefulWidget {
   const EventForm({super.key});
@@ -19,7 +17,7 @@ class EventForm extends StatefulWidget {
   State<EventForm> createState() => _EventFormState();
 }
 
-class _EventFormState extends State<EventForm> {
+class _EventFormState extends State<EventForm> implements EventFormView {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -33,68 +31,40 @@ class _EventFormState extends State<EventForm> {
   String? selectedUF;
   String? selectedCity;
 
+  late EventFormPresenter presenter;
+
+  @override
+  void initState() {
+    super.initState();
+    presenter = EventFormPresenter(this);
+  }
+
+  @override
+  void showLoading() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void hideLoading() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   Future<void> registerEvent() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-      });
-
-      String date = '';
-      try {
-        DateTime dateTime = DateFormat('d/M/yyyy').parse(_dateController.text);
-        date = DateFormat('yyyy-MM-dd').format(dateTime);
-      } catch (e) {
-        // Se a data for inválida, exibe uma mensagem de erro ou trata o erro adequadamente
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Formato de data inválido'),
-        ));
-        setState(() {
-          isLoading = false;
-        });
-        return;
-      }
-
-      // Converte a data de nascimento para o formato aaaa-mm-dd
-      Map<String, String> body = {
-        'titulo': _titleController.text,
-        'endereco': _addressController.text, // Codifica a senha em Base64
-        'estado': selectedUF ?? '',
-        'cidade': selectedCity ?? '',
-        'contato': _contactController.text,
-        'data': date,
-        'horaInicio': _startHourController.text,
-        'horaFim': _finalHourController.text // A data de nascimento
-      };
-
-      final Uri url = Uri.parse('http://10.0.2.2:3000/eventos');
-      final authToken = await getToken();
-      try {
-        final response = await http.post(url,
-            headers: {
-              'Content-Type': 'application/json',
-              'authorization': 'Bearer $authToken'
-            },
-            body: jsonEncode(body));
-
-        if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Cadastrado com sucesso'),
-          ));
-          Navigator.pop(context, true);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Erro ao registrar: ${response.body}'),
-          ));
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Erro: $e'),
-        ));
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
-      }
+      presenter.registerEvent(
+          context,
+          _titleController.text,
+          _addressController.text,
+          selectedUF!,
+          selectedCity!,
+          _contactController.text,
+          _dateController.text,
+          _startHourController.text,
+          _finalHourController.text);
     }
   }
 

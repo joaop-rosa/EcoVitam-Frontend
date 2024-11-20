@@ -4,10 +4,10 @@ import 'package:ecovitam/components/form/CustomTextFormField.dart';
 import 'package:ecovitam/components/form/PhoneField.dart';
 import 'package:ecovitam/components/form/UfDropdown.dart';
 import 'package:ecovitam/constants/colors.dart';
-import 'package:ecovitam/helpers/jwt.dart';
+
+import 'package:ecovitam/presenter/CollectionPointFormPresenter.dart';
+import 'package:ecovitam/view/CollectionPointFormView.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class CollectionPointForm extends StatefulWidget {
   const CollectionPointForm({super.key});
@@ -16,7 +16,8 @@ class CollectionPointForm extends StatefulWidget {
   State<CollectionPointForm> createState() => _CollectionPointFormState();
 }
 
-class _CollectionPointFormState extends State<CollectionPointForm> {
+class _CollectionPointFormState extends State<CollectionPointForm>
+    implements CollectionPointFormView {
   final _formKey = GlobalKey<FormState>(); // Chave do formulário para validação
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -26,50 +27,37 @@ class _CollectionPointFormState extends State<CollectionPointForm> {
   String? selectedUF;
   String? selectedCity;
 
+  late CollectionPointFormPresenter presenter;
+
+  @override
+  void initState() {
+    super.initState();
+    presenter = CollectionPointFormPresenter(this);
+  }
+
+  @override
+  void showLoading() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void hideLoading() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   Future<void> registerCollectionPoint() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        isLoading = true;
-      });
-
-      // Converte a data de nascimento para o formato aaaa-mm-dd
-      Map<String, String> body = {
-        'nome': _nameController.text,
-        'endereco': _addressController.text, // Codifica a senha em Base64
-        'estado': selectedUF ?? '',
-        'cidade': selectedCity ?? '',
-        'contato': _contactController.text, // A data de nascimento
-      };
-
-      final Uri url = Uri.parse('http://10.0.2.2:3000/ponto-coleta');
-      final authToken = await getToken();
-      try {
-        final response = await http.post(url,
-            headers: {
-              'Content-Type': 'application/json',
-              'authorization': 'Bearer $authToken'
-            },
-            body: jsonEncode(body));
-
-        if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Cadastrado com sucesso'),
-          ));
-          Navigator.pop(context, true);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('Erro ao registrar: ${response.body}'),
-          ));
-        }
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Erro: $e'),
-        ));
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
-      }
+      presenter.registerCollectionPoint(
+          context,
+          _nameController.text,
+          _addressController.text,
+          selectedUF!,
+          selectedCity!,
+          _contactController.text);
     }
   }
 
