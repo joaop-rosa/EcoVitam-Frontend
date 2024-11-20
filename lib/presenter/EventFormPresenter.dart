@@ -1,3 +1,4 @@
+import 'package:ecovitam/constants/api.dart';
 import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/view/EventFormView.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class EventFormPresenter {
       'horaFim': finalHour // A data de nascimento
     };
 
-    final Uri url = Uri.parse('http://10.0.2.2:3000/eventos');
+    final Uri url = Uri.parse('$API_URL/eventos');
     final authToken = await getToken();
     try {
       final response = await http.post(url,

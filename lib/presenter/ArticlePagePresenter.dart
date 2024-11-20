@@ -1,3 +1,4 @@
+import 'package:ecovitam/constants/api.dart';
 import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/models/Article.dart';
 import 'package:ecovitam/models/User.dart';
@@ -24,7 +25,7 @@ class ArticlePagePresenter {
     view.hideError();
     view.showLoading();
 
-    final Uri url = Uri.parse('http://10.0.2.2:3000/artigo');
+    final Uri url = Uri.parse('$API_URL/artigo');
 
     final authToken = await getToken();
     try {

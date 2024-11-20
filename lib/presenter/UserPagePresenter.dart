@@ -1,3 +1,4 @@
+import 'package:ecovitam/constants/api.dart';
 import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/models/CollectionPoint.dart';
 import 'package:ecovitam/models/Events.dart';
@@ -24,7 +25,7 @@ class UserPagePresenter {
     view.showLoading();
     view.hideError();
 
-    final Uri url = Uri.parse('http://10.0.2.2:3000/meus-eventos');
+    final Uri url = Uri.parse('$API_URL/meus-eventos');
 
     final authToken = await getToken();
 
@@ -67,7 +68,7 @@ class UserPagePresenter {
     view.showLoading();
     view.hideError();
 
-    final Uri url = Uri.parse('http://10.0.2.2:3000/meus-pontos-coleta');
+    final Uri url = Uri.parse('$API_URL/meus-pontos-coleta');
 
     final authToken = await getToken();
 

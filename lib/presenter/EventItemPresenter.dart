@@ -1,10 +1,11 @@
+import 'package:ecovitam/constants/api.dart';
 import 'package:ecovitam/helpers/jwt.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class EventItemPresenter {
   Future<void> sendReport(BuildContext context, int id) async {
-    final Uri url = Uri.parse('http://10.0.2.2:3000/eventos-denuncia/$id');
+    final Uri url = Uri.parse('$API_URL/eventos-denuncia/$id');
 
     final authToken = await getToken();
 
@@ -52,7 +53,7 @@ class EventItemPresenter {
   }
 
   Future<bool?> like(BuildContext context, int id) async {
-    final Uri url = Uri.parse('http://10.0.2.2:3000/eventos-likes/$id/true');
+    final Uri url = Uri.parse('$API_URL/eventos-likes/$id/true');
 
     final authToken = await getToken();
 
@@ -96,7 +97,7 @@ class EventItemPresenter {
   }
 
   Future<void> delete(BuildContext context, int id) async {
-    final Uri url = Uri.parse('http://10.0.2.2:3000/eventos-delete/$id');
+    final Uri url = Uri.parse('$API_URL/eventos-delete/$id');
 
     final authToken = await getToken();
 

@@ -1,3 +1,4 @@
+import 'package:ecovitam/constants/api.dart';
 import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/view/LoginView.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class LoginPagePresenter {
     final authToken = await getToken();
     try {
       final response = await http.get(
-        Uri.parse('http://10.0.2.2:3000/check-token'),
+        Uri.parse('$API_URL/check-token'),
         headers: {
           'Content-Type': 'application/json',
           'authorization': 'Bearer $authToken'

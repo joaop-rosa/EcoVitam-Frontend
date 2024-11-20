@@ -1,3 +1,4 @@
+import 'package:ecovitam/constants/api.dart';
 import 'package:ecovitam/models/ArticleDetailed.dart';
 import 'package:ecovitam/view/ArticleDetailedView.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class ArticleDetailedPagePresenter {
   ArticleDetailedPagePresenter(this.view);
 
   Future<bool?> like(BuildContext context, int id, bool isLiked) async {
-    final Uri url = Uri.parse('http://10.0.2.2:3000/artigo-likes/$id/$isLiked');
+    final Uri url = Uri.parse('$API_URL/artigo-likes/$id/$isLiked');
     final authToken = await getToken();
 
     try {
@@ -60,7 +61,7 @@ class ArticleDetailedPagePresenter {
     view.hideError();
     view.showLoading();
 
-    final Uri url = Uri.parse('http://10.0.2.2:3000/artigo/$id');
+    final Uri url = Uri.parse('$API_URL/artigo/$id');
     final authToken = await getToken();
 
     try {

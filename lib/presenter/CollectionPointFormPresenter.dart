@@ -1,3 +1,4 @@
+import 'package:ecovitam/constants/api.dart';
 import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/view/CollectionPointFormView.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class CollectionPointFormPresenter {
       'contato': contact, // A data de nascimento
     };
 
-    final Uri url = Uri.parse('http://10.0.2.2:3000/ponto-coleta');
+    final Uri url = Uri.parse('$API_URL/ponto-coleta');
     final authToken = await getToken();
     try {
       final response = await http.post(url,

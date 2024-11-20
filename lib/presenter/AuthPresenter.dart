@@ -1,3 +1,4 @@
+import 'package:ecovitam/constants/api.dart';
 import 'package:ecovitam/view/AuthView.dart';
 import 'package:flutter/material.dart';
 import 'package:ecovitam/helpers/jwt.dart';
@@ -20,7 +21,7 @@ class AuthPresenter {
 
     try {
       final response = await http.post(
-        Uri.parse('http://10.0.2.2:3000/login'),
+        Uri.parse('$API_URL/login'),
         headers: {
           'Authorization': basicAuth,
           'Content-Type': 'application/json',

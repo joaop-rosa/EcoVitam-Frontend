@@ -1,5 +1,6 @@
 import 'package:ecovitam/components/Button.dart';
 import 'package:ecovitam/components/form/CustomTextFormField.dart';
+import 'package:ecovitam/constants/api.dart';
 import 'package:ecovitam/constants/colors.dart';
 import 'package:ecovitam/helpers/jwt.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class _ArticleModalState extends State<ArticleModal> {
         'conteudo': _contentController.text,
       };
 
-      final Uri url = Uri.parse('http://10.0.2.2:3000/artigo');
+      final Uri url = Uri.parse('$API_URL/artigo');
       final authToken = await getToken();
       try {
         final response = await http.post(url,

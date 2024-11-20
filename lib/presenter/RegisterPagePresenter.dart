@@ -1,3 +1,4 @@
+import 'package:ecovitam/constants/api.dart';
 import 'package:ecovitam/presenter/AuthPresenter.dart';
 import 'package:ecovitam/view/RegisterView.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ class RegisterPagePresenter {
       'data_nascimento': birthdate,
     };
 
-    final Uri url = Uri.parse('http://10.0.2.2:3000/user');
+    final Uri url = Uri.parse('$API_URL/user');
 
     try {
       final response = await http.post(url,
