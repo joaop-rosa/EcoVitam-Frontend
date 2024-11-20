@@ -22,6 +22,18 @@ class ArticleDetailedPagePresenter {
         'authorization': 'Bearer $authToken'
       });
 
+      if (response.statusCode == 401) {
+        await deleteToken();
+        Navigator.pushReplacementNamed(context, '/login');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text("Seu login expirou, faça login novamente para continuar"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
       if (response.statusCode == 200) {
         return true;
       } else {
@@ -44,7 +56,7 @@ class ArticleDetailedPagePresenter {
     return null;
   }
 
-  Future<void> fetchArticle(int id) async {
+  Future<void> fetchArticle(BuildContext context, int id) async {
     view.hideError();
     view.showLoading();
 
@@ -56,6 +68,18 @@ class ArticleDetailedPagePresenter {
         'Content-Type': 'application/json',
         'authorization': 'Bearer $authToken'
       });
+
+      if (response.statusCode == 401) {
+        await deleteToken();
+        Navigator.pushReplacementNamed(context, '/login');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text("Seu login expirou, faça login novamente para continuar"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
 
       if (response.statusCode == 200) {
         dynamic jsonArray = json.decode(response.body);

@@ -14,6 +14,18 @@ class EventItemPresenter {
         'authorization': 'Bearer $authToken'
       });
 
+      if (response.statusCode == 401) {
+        await deleteToken();
+        Navigator.pushReplacementNamed(context, '/login');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text("Seu login expirou, faça login novamente para continuar"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -50,6 +62,18 @@ class EventItemPresenter {
         'authorization': 'Bearer $authToken'
       });
 
+      if (response.statusCode == 401) {
+        await deleteToken();
+        Navigator.pushReplacementNamed(context, '/login');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text("Seu login expirou, faça login novamente para continuar"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+
       if (response.statusCode == 200) {
         return true;
       } else {
@@ -81,6 +105,18 @@ class EventItemPresenter {
         'Content-Type': 'application/json',
         'authorization': 'Bearer $authToken'
       });
+
+      if (response.statusCode == 401) {
+        await deleteToken();
+        Navigator.pushReplacementNamed(context, '/login');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text("Seu login expirou, faça login novamente para continuar"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
 
       if (response.statusCode == 200) {
         Navigator.pushReplacementNamed(context, '/user');

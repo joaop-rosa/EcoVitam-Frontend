@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> implements HomeView {
   void initState() {
     super.initState();
     presenter = HomePresenter(this);
-    presenter.fetchList('collectionPoint');
+    presenter.fetchList(context, 'collectionPoint');
   }
 
   @override
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> implements HomeView {
       String oldState = selectedButton;
       selectedButton = selectedButtonName;
       if (selectedButton != oldState) {
-        presenter.fetchList(selectedButton);
+        presenter.fetchList(context, selectedButton);
       }
     });
   }
@@ -167,7 +167,7 @@ class _HomePageState extends State<HomePage> implements HomeView {
                   HomeInputFilter(
                     onChanged: (value) {
                       presenter.lastQueryCity = value;
-                      presenter.fetchList(selectedButton);
+                      presenter.fetchList(context, selectedButton);
                     },
                     hintText: 'Busque pela cidade',
                   ),
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> implements HomeView {
                   HomeInputFilter(
                     onChanged: (value) {
                       presenter.lastQueryName = value;
-                      presenter.fetchList(selectedButton);
+                      presenter.fetchList(context, selectedButton);
                     },
                     hintText: 'Busque pelo nome',
                   ),
@@ -243,7 +243,7 @@ class _HomePageState extends State<HomePage> implements HomeView {
                     );
 
                     if (result == true) {
-                      presenter.fetchList(selectedButton);
+                      presenter.fetchList(context, selectedButton);
                     }
                   },
                   icon: const Icon(

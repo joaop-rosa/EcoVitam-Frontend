@@ -2,6 +2,7 @@ import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/models/Article.dart';
 import 'package:ecovitam/models/User.dart';
 import 'package:ecovitam/view/ArticleView.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decoder/jwt_decoder.dart';
@@ -19,7 +20,7 @@ class ArticlePagePresenter {
     }
   }
 
-  Future<void> fetchList() async {
+  Future<void> fetchList(BuildContext context) async {
     view.hideError();
     view.showLoading();
 
@@ -31,6 +32,18 @@ class ArticlePagePresenter {
         'Content-Type': 'application/json',
         'authorization': 'Bearer $authToken'
       });
+
+      if (response.statusCode == 401) {
+        await deleteToken();
+        Navigator.pushReplacementNamed(context, '/login');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content:
+                Text("Seu login expirou, faça login novamente para continuar"),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
 
       if (response.statusCode == 200) {
         List<dynamic> jsonArray = json.decode(response.body);

@@ -42,7 +42,7 @@ class _UserPageState extends State<UserPage> implements UserView {
       });
     }
 
-    presenter.fetchList(selectedButton);
+    presenter.fetchList(context, selectedButton);
   }
 
   @override
@@ -106,7 +106,7 @@ class _UserPageState extends State<UserPage> implements UserView {
       String oldState = selectedButton;
       selectedButton = selectedButtonName;
       if (selectedButton != oldState) {
-        presenter.fetchList(selectedButton);
+        presenter.fetchList(context, selectedButton);
       }
     });
   }

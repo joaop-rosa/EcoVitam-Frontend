@@ -73,7 +73,7 @@ class _ArticleDetailedPageState extends State<ArticleDetailedPage>
     final int? id = ModalRoute.of(context)?.settings.arguments as int?;
     if (id != null && id != articleId) {
       articleId = id;
-      presenter.fetchArticle(articleId!);
+      presenter.fetchArticle(context, articleId!);
     }
   }
 

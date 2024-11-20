@@ -1,3 +1,4 @@
+import 'package:ecovitam/helpers/jwt.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -28,6 +29,18 @@ class _UFDropdownState extends State<UFDropdown> {
   Future<void> fetchUFs() async {
     final response = await http.get(Uri.parse(
         'https://servicodados.ibge.gov.br/api/v1/localidades/estados'));
+
+    if (response.statusCode == 401) {
+      await deleteToken();
+      Navigator.pushReplacementNamed(context, '/login');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text("Seu login expirou, faça login novamente para continuar"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);

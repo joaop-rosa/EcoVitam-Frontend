@@ -27,7 +27,7 @@ class _ArticlePageState extends State<ArticlePage> implements ArticleView {
   void initState() {
     super.initState();
     presenter = ArticlePagePresenter(this);
-    presenter.fetchList();
+    presenter.fetchList(context);
     presenter.initializeData();
   }
 
@@ -149,7 +149,7 @@ class _ArticlePageState extends State<ArticlePage> implements ArticleView {
                     );
 
                     if (result == true) {
-                      presenter.fetchList();
+                      presenter.fetchList(context);
                     }
                   },
                   icon: const Icon(
