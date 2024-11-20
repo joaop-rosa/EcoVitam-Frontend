@@ -25,6 +25,7 @@ HIGH
 [x] - implementar exclusão
 [x] - implementar login quando registrar
 [] - implementar markdown
+[] - Remover botão de adição de artigo para usuários sem admin
 
 MEDIUM
 
