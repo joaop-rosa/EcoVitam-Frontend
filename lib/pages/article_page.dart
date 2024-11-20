@@ -4,9 +4,11 @@ import 'package:ecovitam/constants/colors.dart';
 import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/modals/ArticleModal.dart';
 import 'package:ecovitam/models/Article.dart';
+import 'package:ecovitam/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:jwt_decoder/jwt_decoder.dart';
 
 class ArticlePage extends StatefulWidget {
   const ArticlePage({super.key});
@@ -19,6 +21,7 @@ class _ArticlePageState extends State<ArticlePage> {
   bool isLoading = false;
   bool hasError = false;
   List<Article> articles = [];
+  User? user;
 
   Future<void> fetchList() async {
     setState(() {
@@ -61,10 +64,21 @@ class _ArticlePageState extends State<ArticlePage> {
     }
   }
 
+  Future<void> initializeData() async {
+    final token = await getToken();
+    if (token != null) {
+      setState(() {
+        final decodedToken = JwtDecoder.decode(token);
+        user = User.fromJson(jsonDecode(decodedToken['user']));
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     fetchList();
+    initializeData();
   }
 
   @override
@@ -124,36 +138,37 @@ class _ArticlePageState extends State<ArticlePage> {
                     const SizedBox(height: 15)
                   ]);
                 }),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: IconButton(
-                onPressed: () async {
-                  final result = await showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (BuildContext context) {
-                      return Padding(
-                          padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom,
-                          ),
-                          child: const ArticleModal());
-                    },
-                  );
+            if (user != null && user!.is_admin)
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: IconButton(
+                  onPressed: () async {
+                    final result = await showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (BuildContext context) {
+                        return Padding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: const ArticleModal());
+                      },
+                    );
 
-                  if (result == true) {
-                    fetchList();
-                  }
-                },
-                icon: const Icon(
-                  Icons.add,
+                    if (result == true) {
+                      fetchList();
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                  ),
+                  style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(primary),
+                    minimumSize: WidgetStatePropertyAll(Size(52, 52)),
+                  ),
                 ),
-                style: const ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(primary),
-                  minimumSize: WidgetStatePropertyAll(Size(52, 52)),
-                ),
-              ),
-            )
+              )
           ]),
         ));
   }

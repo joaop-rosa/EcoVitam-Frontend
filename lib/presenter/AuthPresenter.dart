@@ -38,14 +38,14 @@ class AuthPresenter {
           const SnackBar(
               content: Text('Login falhou. Verifique suas credenciais.')),
         );
-        Navigator.pushReplacementNamed(context, '/login');
+        Navigator.pushReplacementNamed(context, '/');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
             content: Text('Ocorreu um erro. Tente novamente mais tarde.')),
       );
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/');
     } finally {
       view.hideLoading();
     }
