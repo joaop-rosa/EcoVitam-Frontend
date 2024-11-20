@@ -198,6 +198,8 @@ class _HomePageState extends State<HomePage> implements HomeView {
                                   : const ButtonStyle(),
                               child: const Text(
                                 'Pontos de coleta',
+                                textAlign: TextAlign.center,
+                                softWrap: true,
                                 style: TextStyle(
                                     color: Color.fromRGBO(7, 7, 7, 1),
                                     fontWeight: FontWeight.bold,

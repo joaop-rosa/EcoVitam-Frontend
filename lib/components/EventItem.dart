@@ -98,11 +98,34 @@ class _EventItemState extends State<EventItem> {
                       ))
             ],
           ),
-          Text(
-              'Endereço: ${widget.event.endereco} - ${widget.event.cidade} - ${widget.event.estado}'),
-          Text('Contato: ${widget.event.contato}'),
-          Text(
-              'Data: ${widget.event.data.day}/${widget.event.data.month}/${widget.event.data.year}'),
+          Text.rich(
+            TextSpan(children: [
+              const TextSpan(
+                  text: 'Endereço: ',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(
+                  text:
+                      '${widget.event.data.day}/${widget.event.data.month}/${widget.event.data.year}')
+            ]),
+          ),
+          Text.rich(
+            TextSpan(children: [
+              const TextSpan(
+                  text: 'Contato: ',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(text: widget.event.contato)
+            ]),
+          ),
+          Text.rich(
+            TextSpan(children: [
+              const TextSpan(
+                  text: 'Data: ',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
+              TextSpan(
+                  text:
+                      '${widget.event.data.day}/${widget.event.data.month}/${widget.event.data.year}')
+            ]),
+          ),
           Text(
               '${widget.event.horaInicio.substring(0, 5)}h as ${widget.event.horaFim.substring(0, 5)}h'),
           const SizedBox(height: 10),

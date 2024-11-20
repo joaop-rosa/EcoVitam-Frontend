@@ -209,6 +209,7 @@ class _UserPageState extends State<UserPage> implements UserView {
                               : const ButtonStyle(),
                           child: const Text(
                             'Pontos de coleta',
+                            textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Color.fromRGBO(7, 7, 7, 1),
                                 fontWeight: FontWeight.bold,
