@@ -24,7 +24,7 @@ class _HomeInputFilterState extends State<HomeInputFilter> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     _debounce = Timer(widget.debounceDuration, () {
-      widget.onChanged(text); // Chama a função passada como argumento
+      widget.onChanged(text);
     });
   }
 

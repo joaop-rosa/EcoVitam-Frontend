@@ -1,14 +1,12 @@
 import 'package:ecovitam/components/BottomNavigationBarDefault.dart';
 import 'package:ecovitam/components/DefaultAppBar.dart';
 import 'package:ecovitam/constants/colors.dart';
-import 'package:ecovitam/helpers/jwt.dart';
 import 'package:ecovitam/modals/ArticleModal.dart';
 import 'package:ecovitam/models/Article.dart';
 import 'package:ecovitam/models/User.dart';
+import 'package:ecovitam/presenter/ArticlePagePresenter.dart';
+import 'package:ecovitam/view/ArticleView.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 class ArticlePage extends StatefulWidget {
   const ArticlePage({super.key});
@@ -17,68 +15,62 @@ class ArticlePage extends StatefulWidget {
   State<ArticlePage> createState() => _ArticlePageState();
 }
 
-class _ArticlePageState extends State<ArticlePage> {
+class _ArticlePageState extends State<ArticlePage> implements ArticleView {
   bool isLoading = false;
   bool hasError = false;
   List<Article> articles = [];
   User? user;
 
-  Future<void> fetchList() async {
-    setState(() {
-      hasError = false;
-      isLoading = true;
-    });
-
-    final Uri url = Uri.parse('http://10.0.2.2:3000/artigo');
-
-    final authToken = await getToken();
-    try {
-      final response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer $authToken'
-      });
-
-      if (response.statusCode == 200) {
-        List<dynamic> jsonArray = json.decode(response.body);
-
-        List<Article> articleResponse = jsonArray.map((jsonItem) {
-          return Article.fromJson(jsonItem);
-        }).toList();
-
-        setState(() {
-          articles = articleResponse;
-        });
-      } else {
-        setState(() {
-          hasError = true;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        hasError = true;
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> initializeData() async {
-    final token = await getToken();
-    if (token != null) {
-      setState(() {
-        final decodedToken = JwtDecoder.decode(token);
-        user = User.fromJson(jsonDecode(decodedToken['user']));
-      });
-    }
-  }
+  late ArticlePagePresenter presenter;
 
   @override
   void initState() {
     super.initState();
-    fetchList();
-    initializeData();
+    presenter = ArticlePagePresenter(this);
+    presenter.fetchList();
+    presenter.initializeData();
+  }
+
+  @override
+  void setUser(User user) {
+    setState(() {
+      this.user = user;
+    });
+  }
+
+  @override
+  void showLoading() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void hideLoading() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void showError() {
+    setState(() {
+      hasError = true;
+    });
+  }
+
+  @override
+  void hideError() {
+    setState(() {
+      hasError = false;
+    });
+  }
+
+  @override
+  void setArticles(List<Article> articles) {
+    setState(() {
+      this.articles = articles;
+    });
   }
 
   @override
@@ -157,7 +149,7 @@ class _ArticlePageState extends State<ArticlePage> {
                     );
 
                     if (result == true) {
-                      fetchList();
+                      presenter.fetchList();
                     }
                   },
                   icon: const Icon(

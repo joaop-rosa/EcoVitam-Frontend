@@ -33,6 +33,7 @@ MEDIUM
 [x] - Ajustar textos que estão pretos para branco
 [x] - implementar modal de confirmação
 [-] - Implementar MVP
+[] - implementar arrow back
 [] - implementar helper para excluir jwt token quando ocorrer erro de autenticação
 [] - Não retornar eventos expirados
 [] - Fazer deploy do banco e api na Azure

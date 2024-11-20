@@ -34,7 +34,7 @@ class _CityDropdownState extends State<CityDropdown> {
       isLoading = true;
     });
     final response = await http.get(Uri.parse(
-        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/$uf/distritos')); // URL da API para cidades
+        'https://servicodados.ibge.gov.br/api/v1/localidades/estados/$uf/distritos'));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -51,13 +51,12 @@ class _CityDropdownState extends State<CityDropdown> {
 
   @override
   void didUpdateWidget(covariant CityDropdown oldWidget) {
-    super.didUpdateWidget(
-        oldWidget); // Certifique-se de chamar o método da superclasse
+    super.didUpdateWidget(oldWidget);
     if (widget.selectedUF != oldWidget.selectedUF &&
         widget.selectedUF != null) {
       setState(() {
         isLoading = true;
-        selectedCity = null; // Limpa a cidade ao trocar o estado
+        selectedCity = null;
       });
       fetchCities(widget.selectedUF!);
     }
