@@ -10,8 +10,9 @@ import 'package:ecovitam/models/Events.dart';
 import 'package:ecovitam/models/User.dart';
 import 'package:ecovitam/presenter/CollectionPointItemPresenter.dart';
 import 'package:ecovitam/presenter/EventItemPresenter.dart';
+import 'package:ecovitam/presenter/UserPagePresenter.dart';
+import 'package:ecovitam/view/UserView.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -22,7 +23,7 @@ class UserPage extends StatefulWidget {
   State<UserPage> createState() => _UserPageState();
 }
 
-class _UserPageState extends State<UserPage> {
+class _UserPageState extends State<UserPage> implements UserView {
   bool isLoading = false;
   bool hasError = false;
   List<CollectionPoint> collectionPoints = [];
@@ -30,59 +31,7 @@ class _UserPageState extends State<UserPage> {
   String selectedButton = 'collectionPoint';
   User? user;
 
-  Future<void> fetchList() async {
-    setState(() {
-      hasError = false;
-      isLoading = true;
-    });
-
-    final Uri url = (selectedButton == 'collectionPoint')
-        ? Uri.parse('http://10.0.2.2:3000/meus-pontos-coleta')
-        : Uri.parse('http://10.0.2.2:3000/meus-eventos');
-
-    final authToken = await getToken();
-    try {
-      final response = await http.get(url, headers: {
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer $authToken'
-      });
-
-      if (response.statusCode == 200) {
-        List<dynamic> jsonArray = json.decode(response.body);
-
-        if (selectedButton == 'collectionPoint') {
-          List<CollectionPoint> collectionPointsResponse =
-              jsonArray.map((jsonItem) {
-            return CollectionPoint.fromJson(jsonItem);
-          }).toList();
-
-          setState(() {
-            collectionPoints = collectionPointsResponse;
-          });
-        } else {
-          List<Event> eventsResponse = jsonArray.map((jsonItem) {
-            return Event.fromJson(jsonItem);
-          }).toList();
-
-          setState(() {
-            events = eventsResponse;
-          });
-        }
-      } else {
-        setState(() {
-          hasError = true;
-        });
-      }
-    } catch (e) {
-      setState(() {
-        hasError = true;
-      });
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  late UserPagePresenter presenter;
 
   Future<void> initializeData() async {
     final token = await getToken();
@@ -93,13 +42,73 @@ class _UserPageState extends State<UserPage> {
       });
     }
 
-    fetchList();
+    presenter.fetchList(selectedButton);
   }
 
   @override
   void initState() {
     super.initState();
+    presenter = UserPagePresenter(this);
     initializeData();
+  }
+
+  @override
+  void showLoading() {
+    setState(() {
+      isLoading = true;
+    });
+  }
+
+  @override
+  void hideLoading() {
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  @override
+  void showError() {
+    setState(() {
+      hasError = true;
+    });
+  }
+
+  @override
+  void hideError() {
+    setState(() {
+      hasError = false;
+    });
+  }
+
+  @override
+  void setButtonActive(String buttonName) {
+    setState(() {
+      selectedButton = buttonName;
+    });
+  }
+
+  @override
+  void setCollectionPoints(List<CollectionPoint> collectionPoints) {
+    setState(() {
+      this.collectionPoints = collectionPoints;
+    });
+  }
+
+  @override
+  void setEvents(List<Event> events) {
+    setState(() {
+      this.events = events;
+    });
+  }
+
+  void selectedButtonTap(String selectedButtonName) {
+    setState(() {
+      String oldState = selectedButton;
+      selectedButton = selectedButtonName;
+      if (selectedButton != oldState) {
+        presenter.fetchList(selectedButton);
+      }
+    });
   }
 
   Widget renderList() {
@@ -191,12 +200,7 @@ class _UserPageState extends State<UserPage> {
                 children: [
                   Expanded(
                       child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedButton = 'collectionPoint';
-                              fetchList();
-                            });
-                          },
+                          onPressed: () => selectedButtonTap('collectionPoint'),
                           style: selectedButton == 'collectionPoint'
                               ? ButtonStyle(
                                   backgroundColor:
@@ -213,12 +217,7 @@ class _UserPageState extends State<UserPage> {
                   const SizedBox(width: 16),
                   Expanded(
                       child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedButton = 'events';
-                              fetchList();
-                            });
-                          },
+                          onPressed: () => selectedButtonTap('events'),
                           style: selectedButton == 'events'
                               ? ButtonStyle(
                                   backgroundColor:

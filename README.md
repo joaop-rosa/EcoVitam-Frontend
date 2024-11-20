@@ -31,7 +31,7 @@ MEDIUM
 
 [x] - cidades duplicadas as vezes
 [x] - Ajustar textos que estão pretos para branco
-[] - implementar modal de confirmação
+[x] - implementar modal de confirmação
 [-] - Implementar MVP
 [] - implementar helper para excluir jwt token quando ocorrer erro de autenticação
 [] - Não retornar eventos expirados
