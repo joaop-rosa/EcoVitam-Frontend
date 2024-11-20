@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
-  // TODO - implementar
   final bool hasArrowBack;
 
   const DefaultAppBar({
@@ -16,12 +15,17 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: const Color.fromARGB(255, 56, 67, 57),
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+      automaticallyImplyLeading: hasArrowBack,
+      leading: hasArrowBack
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
+              },
+            )
+          : null,
       title: Padding(
         padding: const EdgeInsets.only(top: 16.0, bottom: 16),
         child: Row(
